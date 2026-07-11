@@ -6,17 +6,20 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.audimus.data.calendar.CalendarEventDao
 import com.audimus.data.calendar.CreatedCalendarEvent
+import com.audimus.data.calls.CallRecord
+import com.audimus.data.calls.CallRecordDao
 import com.audimus.data.tasks.TaskDao
 import com.audimus.data.tasks.TaskItem
 
 @Database(
-    entities = [TaskItem::class, CreatedCalendarEvent::class],
-    version = 1,
+    entities = [TaskItem::class, CreatedCalendarEvent::class, CallRecord::class],
+    version = 2,
     exportSchema = false,
 )
 abstract class AudimusDatabase : RoomDatabase() {
     abstract fun taskDao(): TaskDao
     abstract fun calendarEventDao(): CalendarEventDao
+    abstract fun callRecordDao(): CallRecordDao
 
     companion object {
         @Volatile
@@ -28,7 +31,7 @@ abstract class AudimusDatabase : RoomDatabase() {
                     context.applicationContext,
                     AudimusDatabase::class.java,
                     "audimus.db",
-                ).build().also { instance = it }
+                ).fallbackToDestructiveMigration(dropAllTables = true).build().also { instance = it }
             }
     }
 }

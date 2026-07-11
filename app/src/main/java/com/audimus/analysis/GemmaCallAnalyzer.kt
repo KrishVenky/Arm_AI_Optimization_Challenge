@@ -305,7 +305,7 @@ class GemmaCallAnalyzer(
     private companion object {
         const val TAG = "GemmaCallAnalyzer"
         const val MODELS_DIR = "models"
-        const val MODEL_FILE_NAME = "gemma-4-E4B-it.litertlm"
+        const val MODEL_FILE_NAME = "gemma-4-E2B-it.litertlm"
 
         val SYSTEM_INSTRUCTION = """
             You are Audimus, an on-device scam-shield analyst embedded in a live phone-call assistant.

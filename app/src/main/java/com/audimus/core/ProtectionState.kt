@@ -1,5 +1,6 @@
 package com.audimus.core
 
+import com.audimus.consent.ConsentState
 import com.audimus.model.AnalysisResult
 import com.audimus.model.RiskLevel
 import com.audimus.stt.TranscriptEntry
@@ -55,6 +56,17 @@ object ProtectionState {
     private val _statusLine = MutableStateFlow("")
     val statusLine: StateFlow<String> = _statusLine.asStateFlow()
 
+    /** Where the per-call consent handshake is. */
+    private val _consentState = MutableStateFlow(ConsentState.IDLE)
+    val consentState: StateFlow<ConsentState> = _consentState.asStateFlow()
+
+    /** True while a call is being protected (a transcript source is/was active this session). */
+    private val _callActive = MutableStateFlow(false)
+    val callActive: StateFlow<Boolean> = _callActive.asStateFlow()
+
+    fun setConsentState(v: ConsentState) { _consentState.value = v }
+    fun setCallActive(v: Boolean) { _callActive.value = v }
+
     fun setServiceConnected(v: Boolean) { _serviceConnected.value = v }
     fun setSourceApp(v: String?) { _sourceApp.value = v }
     fun setScraping(v: Boolean) { _scraping.value = v }
@@ -80,5 +92,7 @@ object ProtectionState {
         _overlayVisible.value = false
         _sourceApp.value = null
         _scraping.value = false
+        _consentState.value = ConsentState.IDLE
+        _callActive.value = false
     }
 }

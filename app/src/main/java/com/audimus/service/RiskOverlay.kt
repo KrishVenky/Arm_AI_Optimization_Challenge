@@ -39,6 +39,7 @@ import androidx.savedstate.SavedStateRegistry
 import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
+import com.audimus.core.AudimusBridge
 import com.audimus.core.ProtectionState
 import com.audimus.model.RiskLevel
 import com.audimus.ui.theme.AudimusTheme
@@ -132,7 +133,9 @@ private fun OverlayContent(onDismiss: () -> Unit) {
                     .padding(24.dp),
             ) {
                 Column(Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                    Text("⚠  Likely scam call", style = MaterialTheme.typography.headlineSmall,
+                    Text("HIGH RISK", style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.Bold, color = Color.White.copy(alpha = 0.85f))
+                    Text("⚠  LIKELY SCAM", style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold, color = Color.White)
                     Text(
                         reason.ifBlank { "This call shows strong signs of a scam." },
@@ -140,16 +143,28 @@ private fun OverlayContent(onDismiss: () -> Unit) {
                     )
                     if (confidence > 0f) {
                         Text("Confidence ${(confidence * 100).toInt()}%",
-                            style = MaterialTheme.typography.bodyMedium, color = Color.White)
+                            style = MaterialTheme.typography.bodyMedium, color = Color.White.copy(alpha = 0.85f))
                     }
-                    Text("Do not share codes, PINs, or payment details. Hang up if unsure.",
-                        style = MaterialTheme.typography.bodyMedium, color = Color.White,
-                        fontWeight = FontWeight.SemiBold)
+                    Box(
+                        Modifier.fillMaxWidth()
+                            .background(Color(0x38000000), MaterialTheme.shapes.medium)
+                            .padding(14.dp),
+                    ) {
+                        Text("🚫  Do not share codes, PINs, or payment details.",
+                            style = MaterialTheme.typography.bodyMedium, color = Color.White,
+                            fontWeight = FontWeight.Bold)
+                    }
+                    Button(
+                        onClick = { runCatching { AudimusBridge.pipeline?.endCall() }; onDismiss() },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.White.copy(alpha = 0.16f), contentColor = Color.White),
+                        modifier = Modifier.fillMaxWidth(),
+                    ) { Text("End call") }
                     Button(
                         onClick = onDismiss,
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.White, contentColor = RiskHigh),
-                        modifier = Modifier.align(Alignment.End),
+                        modifier = Modifier.fillMaxWidth(),
                     ) { Text("Dismiss") }
                 }
             }
