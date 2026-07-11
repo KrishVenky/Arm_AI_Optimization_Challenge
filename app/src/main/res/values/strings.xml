@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Audimus</string>
+    <string name="accessibility_summary">On-device scam-call protection</string>
+    <string name="accessibility_description">Audimus reads the on-screen transcript shown by your captioning app and analyzes the text on-device to warn you about likely scams and capture meetings and tasks. It never records audio, and nothing leaves your phone.</string>
 </resources>
