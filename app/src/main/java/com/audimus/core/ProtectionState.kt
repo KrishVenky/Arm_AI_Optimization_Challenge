@@ -2,6 +2,8 @@ package com.audimus.core
 
 import com.audimus.consent.ConsentState
 import com.audimus.model.AnalysisResult
+import com.audimus.model.PendingMeeting
+import com.audimus.model.PendingTask
 import com.audimus.model.RiskLevel
 import com.audimus.stt.TranscriptEntry
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -67,6 +69,21 @@ object ProtectionState {
     fun setConsentState(v: ConsentState) { _consentState.value = v }
     fun setCallActive(v: Boolean) { _callActive.value = v }
 
+    /** Follow-ups detected on the current call, awaiting the user's review at call-end. */
+    private val _pendingMeetings = MutableStateFlow<List<PendingMeeting>>(emptyList())
+    val pendingMeetings: StateFlow<List<PendingMeeting>> = _pendingMeetings.asStateFlow()
+
+    private val _pendingTasks = MutableStateFlow<List<PendingTask>>(emptyList())
+    val pendingTasks: StateFlow<List<PendingTask>> = _pendingTasks.asStateFlow()
+
+    /** True when the call has ended and the follow-ups review sheet should be shown. */
+    private val _showFollowups = MutableStateFlow(false)
+    val showFollowups: StateFlow<Boolean> = _showFollowups.asStateFlow()
+
+    fun setPendingMeetings(v: List<PendingMeeting>) { _pendingMeetings.value = v }
+    fun setPendingTasks(v: List<PendingTask>) { _pendingTasks.value = v }
+    fun setShowFollowups(v: Boolean) { _showFollowups.value = v }
+
     fun setServiceConnected(v: Boolean) { _serviceConnected.value = v }
     fun setSourceApp(v: String?) { _sourceApp.value = v }
     fun setScraping(v: Boolean) { _scraping.value = v }
@@ -94,5 +111,8 @@ object ProtectionState {
         _scraping.value = false
         _consentState.value = ConsentState.IDLE
         _callActive.value = false
+        _pendingMeetings.value = emptyList()
+        _pendingTasks.value = emptyList()
+        _showFollowups.value = false
     }
 }

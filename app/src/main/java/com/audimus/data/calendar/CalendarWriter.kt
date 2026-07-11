@@ -62,6 +62,17 @@ class CalendarWriter(private val context: Context) {
             }
         }
 
+    /** Deletes the event from the device calendar. Returns true if a row was removed. Never throws. */
+    suspend fun deleteEvent(eventId: Long): Boolean = withContext(Dispatchers.IO) {
+        if (eventId < 0) return@withContext false
+        try {
+            val uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventId)
+            context.contentResolver.delete(uri, null, null) > 0
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to delete event $eventId", e); false
+        }
+    }
+
     /** Prefer a local writable calendar; else any writable one; else create a local "Audimus" calendar. */
     private fun findOrCreateLocalCalendar(): Long? {
         val projection = arrayOf(

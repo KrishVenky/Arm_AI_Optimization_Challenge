@@ -3,6 +3,7 @@ package com.audimus
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import com.audimus.data.calendar.CalendarRepository
 import com.audimus.data.calendar.CreatedCalendarEvent
 import com.audimus.data.calls.CallRecord
@@ -28,4 +29,6 @@ class DashboardViewModel(app: Application) : AndroidViewModel(app) {
 
     val events: StateFlow<List<CreatedCalendarEvent>> =
         calendarRepo.events().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    fun deleteEvent(event: CreatedCalendarEvent) = viewModelScope.launch { calendarRepo.delete(event) }
 }

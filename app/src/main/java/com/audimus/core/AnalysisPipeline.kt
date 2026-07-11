@@ -13,7 +13,11 @@ import com.audimus.data.calendar.CalendarRepository
 import com.audimus.data.calls.CallRepository
 import com.audimus.data.tasks.TaskRepository
 import com.audimus.model.AnalysisResult
+import com.audimus.model.MeetingMention
+import com.audimus.model.PendingMeeting
+import com.audimus.model.PendingTask
 import com.audimus.model.RiskLevel
+import com.audimus.model.TaskMention
 import com.audimus.stt.TranscriptEntry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -36,6 +40,8 @@ class AnalysisPipeline(
         private const val TAG = "AnalysisPipeline"
         private const val ANALYSIS_INTERVAL_MS = 4_000L
         private const val TRANSCRIPT_WINDOW_CHARS = 4_000
+        /** No new transcript for this long (after consent) auto-ends the call → review sheet. */
+        private const val CALL_IDLE_END_MS = 9_000L
     }
 
     private val calendarRepo = CalendarRepository(context)
@@ -48,12 +54,16 @@ class AnalysisPipeline(
 
     private lateinit var analyzer: CallAnalyzer
     private val entries = mutableListOf<TranscriptEntry>()
-    private val seenMeetings = mutableSetOf<String>()
-    private val seenTasks = mutableSetOf<String>()
+    // Detected follow-ups accumulate here (upserted by title/text), and are only written to the
+    // calendar/tasks when the user confirms at call-end — so re-detections update, never duplicate.
+    private val pendingMeetings = mutableListOf<PendingMeeting>()
+    private val pendingTasks = mutableListOf<PendingTask>()
+    private var followupIds = 0L
     private var sourceCall: String = "Live transcript"
     private var dirty = false
     private var initialized = false
     private var callStartMs = 0L
+    private var lastUtteranceMs = 0L
     private var softStopNotified = false
 
     suspend fun initialize() {
@@ -72,6 +82,7 @@ class AnalysisPipeline(
         }
         ProtectionState.setAnalyzerReady(true)
         startAnalysisLoop()
+        startCallEndWatchdog()
         Log.i(TAG, "Analysis pipeline ready (gemma=${ProtectionState.usingGemma.value})")
     }
 
@@ -84,7 +95,8 @@ class AnalysisPipeline(
         if (clean.isEmpty()) return
         if (entries.lastOrNull()?.text == clean) return
         if (!ProtectionState.callActive.value) beginCall()
-        entries.add(TranscriptEntry(System.currentTimeMillis(), clean))
+        lastUtteranceMs = System.currentTimeMillis()
+        entries.add(TranscriptEntry(lastUtteranceMs, clean))
         ProtectionState.setTranscript(entries.toList())
         // Feed the consent handshake: it classifies the caller's spoken yes/no.
         consent.onTranscript(entries.joinToString(" ") { it.text })
@@ -94,8 +106,15 @@ class AnalysisPipeline(
     /** Marks a protected call as started and kicks off the spoken consent handshake. */
     fun beginCall() {
         if (ProtectionState.callActive.value) return
+        pendingMeetings.clear()
+        pendingTasks.clear()
+        followupIds = 0L
+        ProtectionState.setPendingMeetings(emptyList())
+        ProtectionState.setPendingTasks(emptyList())
+        ProtectionState.setShowFollowups(false)
         ProtectionState.setCallActive(true)
         callStartMs = System.currentTimeMillis()
+        lastUtteranceMs = callStartMs
         softStopNotified = false
         consent.start()
     }
@@ -105,15 +124,64 @@ class AnalysisPipeline(
 
     fun grantConsent() = consent.consentManually()
     fun declineConsent() = consent.declineManually()
-    fun endCall() = clear()
 
-    fun clear() {
+    /**
+     * End the current call. Records the call, then — if any follow-ups were detected — shows the
+     * review sheet (nothing is written yet). Otherwise resets straight away.
+     */
+    fun endCall() {
+        if (!ProtectionState.callActive.value) { resetAll(); return }
         recordCallIfAny()
+        consent.reset()
+        ProtectionState.setCallActive(false)
+        ProtectionState.setScraping(false)
+        if (pendingMeetings.isNotEmpty() || pendingTasks.isNotEmpty()) {
+            // Keep the pending follow-ups (already mirrored to ProtectionState) for review.
+            entries.clear()
+            dirty = false
+            ProtectionState.setShowFollowups(true)
+        } else {
+            resetAll()
+        }
+    }
+
+    /** "Clear call" button — discards everything without a review. */
+    fun clear() = resetAll()
+
+    /** User confirmed the (possibly edited) follow-ups: write them to the calendar + tasks. */
+    fun confirmFollowups() {
+        val meetings = ProtectionState.pendingMeetings.value
+        val tasks = ProtectionState.pendingTasks.value
+        val label = sourceCall
+        scope.launch {
+            meetings.forEach { m ->
+                runCatching {
+                    calendarRepo.addFromMention(
+                        MeetingMention(title = m.title, whenText = m.whenText, personName = m.person),
+                        label,
+                    )
+                }.onFailure { Log.e(TAG, "calendar insert failed", it) }
+            }
+            tasks.forEach { t ->
+                runCatching {
+                    taskRepo.addFromMention(TaskMention(text = t.text, assignee = t.assignee), label)
+                }.onFailure { Log.e(TAG, "task insert failed", it) }
+            }
+        }
+        resetAll()
+    }
+
+    /** User skipped the review: keep nothing. */
+    fun dismissFollowups() = resetAll()
+
+    private fun resetAll() {
         entries.clear()
-        seenMeetings.clear()
-        seenTasks.clear()
+        pendingMeetings.clear()
+        pendingTasks.clear()
+        followupIds = 0L
         dirty = false
         callStartMs = 0L
+        lastUtteranceMs = 0L
         softStopNotified = false
         consent.reset()
         ProtectionState.clearSession()
@@ -160,7 +228,23 @@ class AnalysisPipeline(
         }
     }
 
-    private suspend fun applyAnalysis(result: AnalysisResult) {
+    /** Auto-ends the call (→ review sheet) once captions stop arriving for a while. */
+    private fun startCallEndWatchdog() {
+        scope.launch {
+            while (isActive) {
+                delay(2_000L)
+                val active = ProtectionState.callActive.value
+                val consented = ProtectionState.consentState.value == ConsentState.CONSENTED
+                val idleFor = System.currentTimeMillis() - lastUtteranceMs
+                if (active && consented && entries.isNotEmpty() && idleFor > CALL_IDLE_END_MS) {
+                    Log.i(TAG, "Call idle ${idleFor}ms — auto-ending and prompting follow-ups")
+                    endCall()
+                }
+            }
+        }
+    }
+
+    private fun applyAnalysis(result: AnalysisResult) {
         ProtectionState.setLastAnalysis(result)
         ProtectionState.setRisk(result.riskLevel, result.reason, result.confidence)
 
@@ -170,19 +254,30 @@ class AnalysisPipeline(
             RiskLevel.LOW -> ProtectionState.setOverlayVisible(false)
         }
 
+        // Upsert follow-ups by normalized title/text: a re-detection (e.g. Monday → Tuesday) UPDATES
+        // the existing entry instead of adding a new one. Written to calendar/tasks only on confirm.
         result.meeting?.let { m ->
-            if (seenMeetings.add((m.title + m.whenText).lowercase())) {
-                runCatching { calendarRepo.addFromMention(m, sourceCall) }
-                    .onFailure { Log.e(TAG, "calendar insert failed", it) }
-            }
+            val key = normalize(m.title)
+            val idx = pendingMeetings.indexOfFirst { normalize(it.title) == key }
+            val entry = PendingMeeting(
+                id = if (idx >= 0) pendingMeetings[idx].id else followupIds++,
+                title = m.title,
+                whenText = m.whenText,
+                person = m.personName,
+            )
+            if (idx >= 0) pendingMeetings[idx] = entry else pendingMeetings.add(entry)
+            ProtectionState.setPendingMeetings(pendingMeetings.toList())
         }
         result.task?.let { t ->
-            if (seenTasks.add(t.text.lowercase())) {
-                runCatching { taskRepo.addFromMention(t, sourceCall) }
-                    .onFailure { Log.e(TAG, "task insert failed", it) }
+            val key = normalize(t.text)
+            if (pendingTasks.none { normalize(it.text) == key }) {
+                pendingTasks.add(PendingTask(id = followupIds++, text = t.text, assignee = t.assignee))
+                ProtectionState.setPendingTasks(pendingTasks.toList())
             }
         }
     }
+
+    private fun normalize(s: String): String = s.lowercase().trim().replace(Regex("\\s+"), " ")
 
     private fun vibrate(escalating: Boolean) {
         try {

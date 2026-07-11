@@ -29,4 +29,10 @@ class CalendarRepository(context: Context) {
         )
         return eventId
     }
+
+    /** Remove the event from both the device calendar and Audimus's local record. */
+    suspend fun delete(event: CreatedCalendarEvent) {
+        if (event.calendarEventId >= 0) writer.deleteEvent(event.calendarEventId)
+        dao.delete(event)
+    }
 }

@@ -1,8 +1,14 @@
 package com.audimus.ui
 
+import android.content.ContentUris
+import android.content.Context
+import android.content.Intent
+import android.provider.CalendarContract
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextDecoration
@@ -94,7 +101,111 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                 onDecline = { AudimusBridge.pipeline?.endCall() },
             )
         }
+
+        // Follow-ups review sheet appears when the call ends with detected meetings/tasks.
+        val showFollowups by ProtectionState.showFollowups.collectAsStateWithLifecycle()
+        if (showFollowups) FollowupsSheet()
     }
+}
+
+/* ----------------------------- Follow-ups review ----------------------------- */
+
+@Composable
+private fun FollowupsSheet() {
+    val aud = AudimusTheme.colors
+    val meetings by ProtectionState.pendingMeetings.collectAsStateWithLifecycle()
+    val tasks by ProtectionState.pendingTasks.collectAsStateWithLifecycle()
+
+    Column(
+        Modifier.fillMaxSize().background(aud.bg).windowInsetsPadding(WindowInsets.systemBars),
+    ) {
+        Column(Modifier.padding(20.dp, 18.dp, 20.dp, 6.dp)) {
+            Text("Follow-ups detected", fontSize = 24.sp, fontWeight = FontWeight.SemiBold, color = aud.text)
+            Text("Review and edit before saving to your calendar and tasks.", fontSize = 13.5.sp, color = aud.text2)
+        }
+        Column(
+            Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(20.dp, 8.dp, 20.dp, 8.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp),
+        ) {
+            if (meetings.isNotEmpty()) {
+                SectionLabel("Meetings")
+                meetings.forEach { m ->
+                    FollowupCard(onDelete = {
+                        ProtectionState.setPendingMeetings(meetings.filterNot { it.id == m.id })
+                    }) {
+                        EditField("Title", m.title) { v ->
+                            ProtectionState.setPendingMeetings(meetings.map { if (it.id == m.id) it.copy(title = v) else it })
+                        }
+                        EditField("When", m.whenText) { v ->
+                            ProtectionState.setPendingMeetings(meetings.map { if (it.id == m.id) it.copy(whenText = v) else it })
+                        }
+                        EditField("Person", m.person ?: "") { v ->
+                            ProtectionState.setPendingMeetings(meetings.map { if (it.id == m.id) it.copy(person = v.ifBlank { null }) else it })
+                        }
+                    }
+                }
+            }
+            if (tasks.isNotEmpty()) {
+                SectionLabel("Tasks")
+                tasks.forEach { t ->
+                    FollowupCard(onDelete = {
+                        ProtectionState.setPendingTasks(tasks.filterNot { it.id == t.id })
+                    }) {
+                        EditField("Task", t.text) { v ->
+                            ProtectionState.setPendingTasks(tasks.map { if (it.id == t.id) it.copy(text = v) else it })
+                        }
+                        EditField("For", t.assignee ?: "") { v ->
+                            ProtectionState.setPendingTasks(tasks.map { if (it.id == t.id) it.copy(assignee = v.ifBlank { null }) else it })
+                        }
+                    }
+                }
+            }
+            if (meetings.isEmpty() && tasks.isEmpty()) {
+                Text("Nothing left to save.", fontSize = 13.5.sp, color = aud.text2)
+            }
+        }
+        // Actions pinned bottom
+        Row(
+            Modifier.fillMaxWidth().padding(20.dp, 12.dp, 20.dp, 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            PillButton("Skip", aud.surface, aud.text2) { AudimusBridge.pipeline?.dismissFollowups() }
+            Box(Modifier.weight(1f)) {
+                PillButton("Add to calendar & tasks", aud.primary, aud.onPrimary, fill = true) {
+                    AudimusBridge.pipeline?.confirmFollowups()
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun FollowupCard(onDelete: () -> Unit, content: @Composable () -> Unit) {
+    val aud = AudimusTheme.colors
+    Column(
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(18.dp)).background(aud.surface)
+            .border(1.dp, aud.outline, RoundedCornerShape(18.dp)).padding(14.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+        content()
+        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
+            Text("Remove", color = aud.high, fontSize = 12.5.sp, fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.clip(RoundedCornerShape(100.dp)).clickable(onClick = onDelete).padding(8.dp, 4.dp))
+        }
+    }
+}
+
+@Composable
+private fun EditField(label: String, value: String, onChange: (String) -> Unit) {
+    val aud = AudimusTheme.colors
+    androidx.compose.material3.OutlinedTextField(
+        value = value,
+        onValueChange = onChange,
+        modifier = Modifier.fillMaxWidth(),
+        label = { Text(label, color = aud.text3) },
+        singleLine = true,
+        shape = RoundedCornerShape(12.dp),
+    )
 }
 
 /* ----------------------------- Active call ----------------------------- */
@@ -425,13 +536,25 @@ private fun fmtDuration(sec: Int): String = "%d:%02d".format(sec / 60, sec % 60)
 
 @Composable
 private fun CalendarTab(vm: DashboardViewModel, callActive: Boolean, onReturn: () -> Unit) {
-    val aud = AudimusTheme.colors
     val events by vm.events.collectAsStateWithLifecycle()
-    TabPage("Calendar", "Captured from your calls", callActive, onReturn, empty = events.isEmpty(),
+    val ctx = LocalContext.current
+    TabPage("Calendar", "Tap to open · hold to delete", callActive, onReturn, empty = events.isEmpty(),
         emptyIcon = "🗓", emptyTitle = "No events yet",
         emptyText = "When someone mentions a date or meeting on a call, Audimus adds it here automatically.") {
-        items(events) { EventRow(it) }
+        items(events) { EventRow(it, onOpen = { openInCalendar(ctx, it) }, onDelete = { vm.deleteEvent(it) }) }
     }
+}
+
+/** Opens the event in the phone's Calendar app. */
+private fun openInCalendar(ctx: Context, e: CreatedCalendarEvent) {
+    val intent = if (e.calendarEventId >= 0) {
+        Intent(Intent.ACTION_VIEW, ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, e.calendarEventId))
+    } else {
+        // Not written to the device calendar — open the calendar at the event's day instead.
+        Intent(Intent.ACTION_VIEW, ContentUris.withAppendedId(CalendarContract.CONTENT_URI.buildUpon().appendPath("time").build(), e.startMillis))
+    }
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    runCatching { ctx.startActivity(intent) }
 }
 
 @Composable
@@ -494,11 +617,15 @@ private fun TabPage(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun EventRow(e: CreatedCalendarEvent) {
+private fun EventRow(e: CreatedCalendarEvent, onOpen: () -> Unit, onDelete: () -> Unit) {
     val aud = AudimusTheme.colors
     Row(
-        Modifier.fillMaxWidth().clip(RoundedCornerShape(18.dp)).background(aud.surface).border(1.dp, aud.outline, RoundedCornerShape(18.dp)).padding(16.dp),
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(18.dp)).background(aud.surface)
+            .border(1.dp, aud.outline, RoundedCornerShape(18.dp))
+            .combinedClickable(onClick = onOpen, onLongClick = onDelete)
+            .padding(16.dp),
         horizontalArrangement = Arrangement.spacedBy(15.dp),
     ) {
         Column(Modifier.width(46.dp), horizontalAlignment = Alignment.CenterHorizontally) {
