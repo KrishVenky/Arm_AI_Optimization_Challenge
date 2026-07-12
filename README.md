@@ -24,3 +24,7 @@ Audimus reads the on-screen transcript produced by your phone's captioning app v
 ## Team
 
 Built by Krishna Venkatesh and Kaushik Saravanan.
+
+## License
+
+[MIT](LICENSE)
