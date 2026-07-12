@@ -1,14 +1,14 @@
 # Audimus
 
-An on-device AI call assistant built for the Indian context, designed to protect people when they're at their most vulnerable — on a phone call.
+An on-device AI call assistant built for the Indian context, designed to protect people when they're at their most vulnerable: on a phone call.
 
 Built at the **Google DeepMind Bangalore Hackathon 2026**, hosted by Google DeepMind and Cerebral Valley.
 
 ## What it does
 
-- **Real-time scam protection** — analyzes the live call transcript on-device and warns you mid-call when the conversation shows signs of a scam.
-- **Follow-up capture** — detects meetings and action items mentioned during a call, then shows an editable review sheet when the call ends so you can confirm them into your calendar and tasks.
-- **Privacy-first** — everything runs locally on the phone using Gemma. No audio is recorded, and nothing ever leaves the device.
+- **Real-time scam protection**: analyzes the live call transcript on-device and warns you mid-call when the conversation shows signs of a scam.
+- **Follow-up capture**: detects meetings and action items mentioned during a call, then shows an editable review sheet when the call ends so you can confirm them into your calendar and tasks.
+- **Privacy-first**: everything runs locally on the phone using Gemma. No audio is recorded, and nothing ever leaves the device.
 
 ## How it works
 
