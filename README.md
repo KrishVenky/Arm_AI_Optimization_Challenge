@@ -1,8 +1,8 @@
-# Audimus
+# Arm Create: AI Optimization Challenge (Mobile AI Track)
 
-An on-device AI call assistant built for the Indian context, designed to protect people when they're at their most vulnerable: on a phone call.
+An on-device fraud and scam call detection app for Android, referred to in this repo as **Audimus**. It analyzes a live phone call for scam and fraud patterns entirely on the phone, and warns the person on the call while the call is still happening.
 
-Originally built at the **Google DeepMind Bangalore Hackathon 2026**, hosted by Google DeepMind and Cerebral Valley. Significantly updated for the **Arm Create: AI Optimization Challenge** (Mobile AI track): the app now runs its real on-device Gemma model end to end (previously only a keyword fallback was testable), and we measured real Arm KleidiAI quantization speedups directly on the target phone.
+Built as a significant update to an existing on-device scam-detection app for this challenge: it now runs its real on-device Gemma model end to end (previously only a keyword fallback was testable), and we measured real Arm KleidiAI quantization speedups directly on the target phone.
 
 ## The number
 
