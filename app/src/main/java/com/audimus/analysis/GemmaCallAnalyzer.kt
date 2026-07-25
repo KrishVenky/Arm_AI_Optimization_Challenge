@@ -81,7 +81,7 @@ class GemmaCallAnalyzer(
     @Volatile
     private var engine: Engine? = null
 
-    /** Expected on-device location of the model, e.g. .../files/models/gemma-4-E4B-it.litertlm */
+    /** Expected on-device location of the model, e.g. .../files/models/gemma-4-E2B-it.litertlm */
     private val modelFile: File
         get() = File(context.getExternalFilesDir(MODELS_DIR), MODEL_FILE_NAME)
 

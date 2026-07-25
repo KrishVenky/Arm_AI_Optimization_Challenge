@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 
 /**
  * Consumes transcript text (scraped from another app's UI, or typed in the simulator) and runs the
- * on-device analysis: Gemma 4 E4B for scam risk + meeting/task extraction, with a keyword
+ * on-device analysis: Gemma 4 E2B for scam risk + meeting/task extraction, with a keyword
  * [StubCallAnalyzer] fallback until the model is present. Mirrors results into [ProtectionState] and
  * drives vibration, the risk overlay, and calendar/task persistence.
  *
