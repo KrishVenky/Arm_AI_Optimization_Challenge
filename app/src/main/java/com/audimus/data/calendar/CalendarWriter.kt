@@ -13,9 +13,11 @@ import java.util.TimeZone
 /**
  * Stage 7: inserts real events into the device's LOCAL calendar via [CalendarContract].
  *
- * No Google account and no network required — it targets a locally-owned calendar
- * ([CalendarContract.ACCOUNT_TYPE_LOCAL]), creating one named "Audimus" if the device has no
- * writable calendar yet. Requires READ_CALENDAR / WRITE_CALENDAR (declared in the manifest).
+ * No Google account and no network required: it only ever targets a locally-owned calendar
+ * ([CalendarContract.ACCOUNT_TYPE_LOCAL]), creating one named "Audimus" if the device has no local
+ * calendar yet. It never falls back to some other writable (e.g. Google-synced) calendar, since an
+ * event written there could sync off the device through that calendar's own account. Requires
+ * READ_CALENDAR / WRITE_CALENDAR (declared in the manifest).
  */
 class CalendarWriter(private val context: Context) {
 
@@ -73,7 +75,8 @@ class CalendarWriter(private val context: Context) {
         }
     }
 
-    /** Prefer a local writable calendar; else any writable one; else create a local "Audimus" calendar. */
+    /** Find an existing local, account-less writable calendar; else create the "Audimus" one. Never
+     *  returns a calendar of any other account type, so an inserted event can never sync off-device. */
     private fun findOrCreateLocalCalendar(): Long? {
         val projection = arrayOf(
             CalendarContract.Calendars._ID,
@@ -86,17 +89,13 @@ class CalendarWriter(private val context: Context) {
             val idCol = cursor.getColumnIndexOrThrow(CalendarContract.Calendars._ID)
             val typeCol = cursor.getColumnIndexOrThrow(CalendarContract.Calendars.ACCOUNT_TYPE)
             val accessCol = cursor.getColumnIndexOrThrow(CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL)
-            var firstWritable: Long? = null
             while (cursor.moveToNext()) {
                 val id = cursor.getLong(idCol)
                 val type = cursor.getString(typeCol)
                 val access = cursor.getInt(accessCol)
                 val writable = access >= CalendarContract.Calendars.CAL_ACCESS_CONTRIBUTOR
-                if (!writable) continue
-                if (firstWritable == null) firstWritable = id
-                if (type == CalendarContract.ACCOUNT_TYPE_LOCAL) return id // best match
+                if (writable && type == CalendarContract.ACCOUNT_TYPE_LOCAL) return id
             }
-            if (firstWritable != null) return firstWritable
         }
         return createLocalCalendar()
     }
