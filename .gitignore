@@ -13,3 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Internal planning docs (brainstorm specs/plans) - not part of the public submission
+/docs/superpowers/
