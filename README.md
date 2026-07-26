@@ -44,7 +44,7 @@ Without the model file, the app falls back to a deterministic keyword matcher so
 
 ## Team
 
-Built by Krishna Venkatesh and Kaushik Saravanan.
+Built by Krishna Venkatesh.
 
 ## License
 
