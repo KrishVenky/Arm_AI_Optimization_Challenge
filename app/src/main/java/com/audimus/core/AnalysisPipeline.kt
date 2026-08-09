@@ -6,6 +6,7 @@ import android.os.VibratorManager
 import android.util.Log
 import com.audimus.analysis.CallAnalyzer
 import com.audimus.analysis.GemmaCallAnalyzer
+import com.audimus.analysis.RuleBasedRiskDetector
 import com.audimus.analysis.StubCallAnalyzer
 import com.audimus.consent.ConsentController
 import com.audimus.consent.ConsentState
@@ -38,8 +39,19 @@ class AnalysisPipeline(
 ) {
     companion object {
         private const val TAG = "AnalysisPipeline"
-        private const val ANALYSIS_INTERVAL_MS = 4_000L
+        /** How often the loop checks whether a Gemma pass is warranted -- cheap, no model call. */
+        private const val ANALYSIS_POLL_MS = 1_500L
+        /** A Gemma pass fires once this many new characters have arrived since the last pass... */
+        private const val MIN_NEW_CHARS_FOR_ANALYSIS = 150
+        /** ...or this long has passed since the last pass, whichever comes first -- so a call with
+         *  only a trickle of new text still gets analyzed instead of stalling. */
+        private const val MAX_ANALYSIS_WAIT_MS = 10_000L
         private const val TRANSCRIPT_WINDOW_CHARS = 4_000
+        /** entries is trimmed from the front once it exceeds this, so a long call's per-utterance
+         *  joins (consent classification, UI transcript) stay bounded instead of growing for the
+         *  whole call duration. Kept larger than TRANSCRIPT_WINDOW_CHARS so the Gemma prompt window
+         *  is never starved by the trim. */
+        private const val MAX_ENTRIES_CHARS = TRANSCRIPT_WINDOW_CHARS * 2
         /** No new transcript for this long (after consent) auto-ends the call → review sheet. */
         private const val CALL_IDLE_END_MS = 9_000L
     }
@@ -65,6 +77,11 @@ class AnalysisPipeline(
     private var callStartMs = 0L
     private var lastUtteranceMs = 0L
     private var softStopNotified = false
+    private var charsAtLastAnalysis = 0
+    private var lastAnalysisMs = 0L
+    /** Set by an instant rule-based hit so the next poll runs Gemma right away instead of waiting
+     *  out the normal batching window -- the fast path flags it, Gemma confirms/refines/de-escalates. */
+    private var instantTriggerPending = false
 
     suspend fun initialize() {
         if (initialized) return
@@ -97,10 +114,43 @@ class AnalysisPipeline(
         if (!ProtectionState.callActive.value) beginCall()
         lastUtteranceMs = System.currentTimeMillis()
         entries.add(TranscriptEntry(lastUtteranceMs, clean))
+        trimEntries()
         ProtectionState.setTranscript(entries.toList())
         // Feed the consent handshake: it classifies the caller's spoken yes/no.
         consent.onTranscript(entries.joinToString(" ") { it.text })
         dirty = true
+
+        // Instant deterministic check on just the new line: don't wait for the next batched Gemma
+        // pass to flag an obvious hard trigger (OTP/PIN/gift card/etc). Gemma still runs afterward
+        // (instantTriggerPending pulls its next pass forward) and can refine the reason or, if this
+        // was a false trigger, de-escalate via its own applyAnalysis pass.
+        if (ProtectionState.consentState.value == ConsentState.CONSENTED) {
+            RuleBasedRiskDetector.check(clean)?.let { hit ->
+                instantTriggerPending = true
+                if (hit.riskLevel.ordinal > ProtectionState.riskLevel.value.ordinal) {
+                    applyInstantHit(hit)
+                }
+            }
+        }
+    }
+
+    /** entries is unbounded for a call's whole duration otherwise; trim old lines once the total
+     *  text exceeds MAX_ENTRIES_CHARS so per-utterance joins (consent, UI transcript) stay bounded
+     *  instead of growing for the rest of a long call. */
+    private fun trimEntries() {
+        var total = entries.sumOf { it.text.length }
+        while (total > MAX_ENTRIES_CHARS && entries.size > 1) {
+            total -= entries.removeAt(0).text.length
+        }
+    }
+
+    private fun applyInstantHit(hit: RuleBasedRiskDetector.Hit) {
+        ProtectionState.setRisk(hit.riskLevel, "${hit.reason} (instant check, confirming)", hit.confidence)
+        when (hit.riskLevel) {
+            RiskLevel.HIGH -> { ProtectionState.setOverlayVisible(true); vibrate(escalating = true) }
+            RiskLevel.MEDIUM -> vibrate(escalating = false)
+            RiskLevel.LOW -> {}
+        }
     }
 
     /** Marks a protected call as started and kicks off the spoken consent handshake. */
@@ -115,6 +165,9 @@ class AnalysisPipeline(
         ProtectionState.setCallActive(true)
         callStartMs = System.currentTimeMillis()
         lastUtteranceMs = callStartMs
+        lastAnalysisMs = callStartMs
+        charsAtLastAnalysis = 0
+        instantTriggerPending = false
         softStopNotified = false
         consent.start()
     }
@@ -182,6 +235,9 @@ class AnalysisPipeline(
         dirty = false
         callStartMs = 0L
         lastUtteranceMs = 0L
+        lastAnalysisMs = 0L
+        charsAtLastAnalysis = 0
+        instantTriggerPending = false
         softStopNotified = false
         consent.reset()
         ProtectionState.clearSession()
@@ -200,7 +256,7 @@ class AnalysisPipeline(
     private fun startAnalysisLoop() {
         scope.launch {
             while (isActive) {
-                delay(ANALYSIS_INTERVAL_MS)
+                delay(ANALYSIS_POLL_MS)
                 // Gate on the consent handshake: no scam analysis until the caller agrees.
                 when (ProtectionState.consentState.value) {
                     ConsentState.IDLE, ConsentState.REQUESTING -> continue
@@ -214,9 +270,21 @@ class AnalysisPipeline(
                     ConsentState.CONSENTED -> { /* proceed */ }
                 }
                 if (!dirty) continue
+                val fullText = entries.joinToString(" ") { it.text }
+                val newChars = fullText.length - charsAtLastAnalysis
+                val waitedLongEnough = System.currentTimeMillis() - lastAnalysisMs >= MAX_ANALYSIS_WAIT_MS
+                // Batch Gemma calls: a full pass every time ANY new word arrives burns heat/battery
+                // for no benefit when the new text is a few characters. Wait for a meaningful chunk
+                // of new text, a hard rule-based trigger, or a wait-floor so slow trickling speech
+                // still gets analyzed eventually.
+                val shouldAnalyze = instantTriggerPending || newChars >= MIN_NEW_CHARS_FOR_ANALYSIS || waitedLongEnough
+                if (!shouldAnalyze) continue
                 dirty = false
+                instantTriggerPending = false
+                charsAtLastAnalysis = fullText.length
+                lastAnalysisMs = System.currentTimeMillis()
                 // Bound the prompt: reason over the most recent window, not the whole call.
-                val text = entries.joinToString(" ") { it.text }.takeLast(TRANSCRIPT_WINDOW_CHARS)
+                val text = fullText.takeLast(TRANSCRIPT_WINDOW_CHARS)
                 if (text.isBlank()) continue
                 val result = try {
                     analyzer.analyze(text)

@@ -9,8 +9,10 @@ import com.audimus.core.ProtectionState
 import com.audimus.scrape.TranscriptScraper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -26,6 +28,9 @@ class AudimusAccessibilityService : AccessibilityService() {
 
     companion object {
         private const val TAG = "AudimusA11yService"
+        /** Caption apps can emit several accessibility events per second as a line updates in
+         *  place; debounce so the node tree is walked once per burst, not once per event. */
+        private const val SCRAPE_DEBOUNCE_MS = 300L
 
         /** Packages whose on-screen text Audimus treats as a live transcript. */
         private val TRANSCRIPT_SOURCES = mapOf(
@@ -44,6 +49,7 @@ class AudimusAccessibilityService : AccessibilityService() {
 
     /** The transcript-source package currently being scraped, so we can reset on a new source. */
     private var activeSourcePkg: String? = null
+    private var scrapeJob: Job? = null
 
     override fun onServiceConnected() {
         super.onServiceConnected()
@@ -81,10 +87,18 @@ class AudimusAccessibilityService : AccessibilityService() {
         ProtectionState.setSourceApp(sourceLabel)
         ProtectionState.setScraping(true)
         pipeline.setSource(sourceLabel)
-        // The transcript may live in an overlay window (Live Caption) that is NOT rootInActiveWindow,
-        // so locate the window owned by the source package; fall back to the active window.
-        val root = rootForPackage(pkg) ?: rootInActiveWindow
-        runCatching { scraper.scrape(root) }
+
+        // Debounce: wait for a quiet gap before walking the tree, so a burst of events from one
+        // caption update triggers one scrape, not several.
+        scrapeJob?.cancel()
+        scrapeJob = scope.launch {
+            delay(SCRAPE_DEBOUNCE_MS)
+            // The transcript may live in an overlay window (Live Caption) that is NOT
+            // rootInActiveWindow, so locate the window owned by the source package; fall back to
+            // the active window.
+            val root = rootForPackage(pkg) ?: rootInActiveWindow
+            runCatching { scraper.scrape(root) }
+        }
     }
 
     /**

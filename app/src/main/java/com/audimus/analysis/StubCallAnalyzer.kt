@@ -20,27 +20,12 @@ class StubCallAnalyzer : CallAnalyzer {
 
     override suspend fun analyze(transcript: String): AnalysisResult {
         val t = transcript.lowercase()
-
-        val high = HIGH_RISK.filter { it in t }
-        val medium = MEDIUM_RISK.filter { it in t }
-        val (risk, reason, conf) = when {
-            high.isNotEmpty() -> Triple(
-                RiskLevel.HIGH,
-                "Detected high-risk request(s): ${high.joinToString()}. Scammers use these to steal money or credentials.",
-                0.9f,
-            )
-            medium.isNotEmpty() -> Triple(
-                RiskLevel.MEDIUM,
-                "Pressure/urgency language detected: ${medium.joinToString()}.",
-                0.6f,
-            )
-            else -> Triple(RiskLevel.LOW, "No scam indicators so far.", 0.3f)
-        }
+        val hit = RuleBasedRiskDetector.check(transcript)
 
         return AnalysisResult(
-            riskLevel = risk,
-            reason = reason,
-            confidence = conf,
+            riskLevel = hit?.riskLevel ?: RiskLevel.LOW,
+            reason = hit?.reason ?: "No scam indicators so far.",
+            confidence = hit?.confidence ?: 0.3f,
             meeting = extractMeeting(t),
             task = extractTask(transcript),
         )
@@ -61,15 +46,6 @@ class StubCallAnalyzer : CallAnalyzer {
     override fun close() {}
 
     private companion object {
-        val HIGH_RISK = listOf(
-            "otp", "one-time password", "one time password", "gift card", "remote access",
-            "social security", "arrest", "warrant", "bank account", "pin number", "wire transfer",
-            "bitcoin", "crypto", "routing number", "verification code", "read me the code",
-        )
-        val MEDIUM_RISK = listOf(
-            "urgent", "immediately", "verify your account", "suspended", "act now", "final notice",
-            "you owe", "legal action",
-        )
         val MEETING_CUES = listOf("meet", "meeting", "appointment", "see you", "let's schedule", "catch up")
         val TIME_CUES = listOf(
             "tomorrow", "today", "tonight", "monday", "tuesday", "wednesday", "thursday", "friday",

@@ -137,10 +137,13 @@ class GemmaCallAnalyzer(
                     conversation = activeEngine.createConversation(
                         ConversationConfig(
                             systemInstruction = Contents.of(SYSTEM_INSTRUCTION),
+                            // Low temperature: this is a structured-JSON safety classifier, not a
+                            // creative-writing task -- 0.8 invited unnecessary variance in risk
+                            // wording and occasional off-schema drift for no benefit here.
                             samplerConfig = SamplerConfig(
                                 topK = 40,
                                 topP = 0.95,
-                                temperature = 0.8,
+                                temperature = 0.2,
                             ),
                         ),
                     )
