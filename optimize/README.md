@@ -22,8 +22,8 @@ sustained-load measurement:**
   (~8 reps) did not show degradation in testing -- consistent with
   docs/BENCHMARKS.md, which needed a ~50-minute tg128 phase before throttling
   was visible. Use enough reps/duration before trusting a "no throttling" result.
-- `study_tpe.py`, `baselines/random_search.py`, `baselines/qpso.py` -- all three
-  searches, real.
+- `study_tpe.py`, `baselines/random_search.py`, `baselines/qpso.py`,
+  `baselines/qiea.py` -- all four searches, real.
 
 ## Setup
 
@@ -47,7 +47,33 @@ true if you ran the docs/BENCHMARKS.md reproduction steps).
 
 # QPSO control (particles * generations must equal --trials above)
 ./.venv/Scripts/python.exe baselines/qpso.py --particles 5 --generations 4 --n-prompt 128 --n-gen 32 --reps 2
+
+# QIEA -- the real quantum contender (individuals * generations must equal --trials above)
+./.venv/Scripts/python.exe baselines/qiea.py --individuals 5 --generations 4 --n-prompt 128 --n-gen 32 --reps 2
 ```
+
+### QPSO vs. QIEA
+
+Both are "quantum" in name, but only one of them treats the search space as
+what it actually is. `baselines/qpso.py` is quantum-behaved *particle swarm*
+optimization: it moves a continuous position in R^26 and rounds to the
+nearest of the 4 quant choices per block after the fact. That continuous-to-
+discrete mismatch is exactly why it's a control, not a real contender --
+see the TPE recommendation above.
+
+`baselines/qiea.py` is a quantum-inspired estimation-of-distribution
+algorithm: each block's choice is encoded as 2 qubits (4 choices = 2^2), all
+26 blocks sharing one probability distribution that every generation's
+candidates are sampled from. The update is a derived policy-gradient
+(REINFORCE) ascent on expected fitness, with CMA-ES/Natural-Evolution-
+Strategies-style rank-based fitness shaping standing in for the raw (noisy)
+device scores -- not a lookup table. See the module docstring for the full
+derivation, including why the qubit-angle parameterization is already the
+natural-gradient coordinates (constant Fisher information -- the same reason
+statisticians use the arcsine variance-stabilizing transform for a binomial
+proportion). `baselines/test_qiea_offline.py` sanity-checks convergence on a
+synthetic (no-device) needle-in-haystack objective before spending real
+device time on it; run it with `python baselines/test_qiea_offline.py`.
 
 Each run appends one JSON line per trial to `results/*.jsonl` (gitignored --
 these are raw search logs, not curated results; promote a real comparison run's
