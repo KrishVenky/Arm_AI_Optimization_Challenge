@@ -31,7 +31,16 @@ def _restart_adb_server() -> None:
     subprocess.run(["adb", "kill-server"], capture_output=True, env=_ENV)
     time.sleep(2)
     subprocess.run(["adb", "start-server"], capture_output=True, env=_ENV)
-    subprocess.run(["adb", "wait-for-device"], capture_output=True, env=_ENV, timeout=30)
+    try:
+        subprocess.run(["adb", "wait-for-device"], capture_output=True, env=_ENV, timeout=60)
+    except subprocess.TimeoutExpired:
+        # A slow reconnect isn't fatal on its own -- _run_with_retry's caller
+        # still has retry attempts left. Letting this raise uncaught (as it
+        # did before) killed the whole candidate on the very first restart,
+        # burning through _MAX_RETRIES=4 in a single ~34s shot instead of
+        # actually using them -- the cause of the high failure rate seen in
+        # practice (QIEA lost 21/24 trials to exactly this).
+        pass
 
 
 def _run_with_retry(argv: list[str], timeout: float | None) -> subprocess.CompletedProcess:
