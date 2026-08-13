@@ -5,9 +5,12 @@ accuracy numbers in a write-up).
 """
 from __future__ import annotations
 
+import json
 import logging
 import time
+import uuid
 from dataclasses import dataclass
+from pathlib import Path
 
 from accuracy import score_accuracy
 from device import PushError
@@ -15,6 +18,8 @@ from quantize_and_bench import BenchError, Measurement, QuantizeError, cleanup, 
 from search_space import Candidate
 
 log = logging.getLogger("fitness")
+
+_BASELINE_PATH = Path(__file__).resolve().parent / "device_baseline.json"
 
 # A candidate can fail for reasons that have nothing to do with the candidate
 # itself -- e.g. the USB/adb bridge got torn down mid-command because someone
@@ -45,12 +50,10 @@ def score_candidate(
 ) -> Objectives:
     last_error: Exception | None = None
     for attempt in range(_MAX_CANDIDATE_RETRIES):
+        attempt_out_name = out_name or f"cand_{uuid.uuid4().hex[:8]}.gguf"
         try:
-            m: Measurement = evaluate(candidate, n_prompt=n_prompt, n_gen=n_gen, reps=reps, out_name=out_name)
-            try:
-                accuracy = score_accuracy(m.model_name)
-            finally:
-                cleanup(m.model_name)
+            m: Measurement = evaluate(candidate, n_prompt=n_prompt, n_gen=n_gen, reps=reps, out_name=attempt_out_name)
+            accuracy = score_accuracy(m.model_name)
             return Objectives(
                 prompt_processing_tok_s=m.prompt_processing_tok_s,
                 token_generation_tok_s=m.token_generation_tok_s,
@@ -63,18 +66,42 @@ def score_candidate(
                         attempt + 1, _MAX_CANDIDATE_RETRIES, str(e)[:200])
             if attempt < _MAX_CANDIDATE_RETRIES - 1:
                 time.sleep(_RETRY_DELAY_S)
+        finally:
+            # Always try to remove this attempt's quantized file, success or
+            # failure -- evaluate() can fail AFTER llama-quantize already
+            # wrote the ~900MB file (bench crash, adb drop, etc.), and that
+            # leak across hundreds of failed trials filled the device to
+            # 1.1GB free before anyone noticed (see chat/commit history).
+            # cleanup() is `rm -f`, safe even if the file was never created.
+            cleanup(attempt_out_name)
     raise last_error  # same failure twice -- genuinely broken, not a flake
+
+
+def _load_baseline() -> tuple[float, float]:
+    """Per-device (f16_pp_baseline, f16_size_baseline) for combined_score()'s
+    normalization. Reads device_baseline.json if measure_baseline.py has been
+    run on this device; otherwise falls back to the Pixel 9a numbers from
+    docs/BENCHMARKS.md. The fallback keeps algorithm-vs-algorithm rankings
+    valid within one run (a constant scale factor doesn't change relative
+    order) but makes absolute scores incomparable across different devices
+    that haven't each measured their own baseline -- e.g. a non-Pixel phone's
+    combined_score would be silently normalized against the wrong chip's
+    speed. See measure_baseline.py.
+    """
+    if _BASELINE_PATH.exists():
+        data = json.loads(_BASELINE_PATH.read_text())
+        return data["f16_pp_baseline"], data["f16_size_baseline"]
+    return 19.87, 2_006_573_344  # docs/BENCHMARKS.md clean-run F16 baseline (Pixel 9a)
 
 
 def combined_score(obj: Objectives) -> float:
     """Single scalar for algorithms that need one (random search, QPSO baseline).
 
     Accuracy dominates (0.6): a fast, small, wrong model is useless for a scam
-    detector. Speed and size split the remainder, normalized against the F16
-    baseline from docs/BENCHMARKS.md.
+    detector. Speed and size split the remainder, normalized against this
+    device's own F16 baseline (see _load_baseline).
     """
-    f16_pp_baseline = 19.87  # docs/BENCHMARKS.md clean-run F16 baseline
-    f16_size_baseline = 2_006_573_344  # bytes, same source
+    f16_pp_baseline, f16_size_baseline = _load_baseline()
 
     speed_term = obj.prompt_processing_tok_s / f16_pp_baseline
     size_term = 1.0 - (obj.model_size_bytes / f16_size_baseline)

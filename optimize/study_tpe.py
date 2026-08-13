@@ -36,7 +36,24 @@ def make_objective(n_prompt: int, n_gen: int, reps: int, log_path: Path):
     def objective(trial: optuna.Trial) -> float:
         candidate = suggest_candidate(trial)
         started = time.monotonic()
-        obj = score_candidate(candidate, n_prompt=n_prompt, n_gen=n_gen, reps=reps)
+        try:
+            obj = score_candidate(candidate, n_prompt=n_prompt, n_gen=n_gen, reps=reps)
+        except Exception as e:
+            # Unlike random_search.py/qpso.py/qiea.py/ga.py, this used to let
+            # optuna's catch=(Exception,) swallow the failure silently -- the
+            # trial showed up as "[W ... Trial N failed with value None]" in
+            # stderr but never got a JSONL record, so results/*.jsonl always
+            # undercounted TPE's real failure rate (e.g. 8/16 lost silently
+            # in one run -- see chat/commit history). Log it like everything
+            # else does, then let it propagate so optuna still marks the
+            # trial FAILED.
+            elapsed = time.monotonic() - started
+            record = {"trial": trial.number, "error": str(e)[:500], "elapsed_s": elapsed,
+                       "block_types": candidate.block_types}
+            with log_path.open("a") as f:
+                f.write(json.dumps(record) + "\n")
+            log.error("trial %d FAILED (%.1fs): %s", trial.number, elapsed, str(e)[:200])
+            raise
         score = combined_score(obj)
         elapsed = time.monotonic() - started
 
