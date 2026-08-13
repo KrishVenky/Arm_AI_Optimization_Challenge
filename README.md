@@ -32,6 +32,7 @@ Audimus reads the on-screen transcript produced by a captioning app already runn
 - Gemma 4 E2B running fully on-device via Google's LiteRT-LM
 - Android accessibility services for transcript capture
 - llama.cpp and Arm KleidiAI for the standalone on-device quantization benchmark ([docs/BENCHMARKS.md](docs/BENCHMARKS.md))
+- Optuna/TPE, QPSO, and QIEA search algorithms comparing per-layer quantization strategies against a random-search control, all real on-device runs ([docs/QUANTIZATION_SEARCH.md](docs/QUANTIZATION_SEARCH.md))
 
 ## Setup
 
