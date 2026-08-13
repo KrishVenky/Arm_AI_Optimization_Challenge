@@ -1,0 +1,66 @@
+++ date
++ echo 'START: Thu Aug 13 13:06:16 IST 2026'
+START: Thu Aug 13 13:06:16 IST 2026
++ ./.venv/Scripts/python.exe baselines/random_search.py --trials 9 --n-prompt 128 --n-gen 32 --reps 2 --log results/v2_random.jsonl
+2026-08-13 13:09:57,297 trial 0: score=2.7536 pp=170.7 tok/s size=888MiB (220.5s)
+2026-08-13 13:14:32,558 trial 1: score=2.3905 pp=153.5 tok/s size=843MiB (275.3s)
+2026-08-13 13:19:20,761 trial 2: score=1.9234 pp=119.4 tok/s size=847MiB (288.2s)
+2026-08-13 13:24:41,173 trial 3: score=2.3708 pp=135.5 tok/s size=832MiB (320.4s)
+2026-08-13 13:29:30,253 trial 4: score=2.5252 pp=158.0 tok/s size=800MiB (289.1s)
+2026-08-13 13:35:23,002 trial 5: score=2.2662 pp=137.9 tok/s size=871MiB (352.7s)
+2026-08-13 13:40:46,031 trial 6: score=2.1609 pp=129.5 tok/s size=866MiB (323.0s)
+2026-08-13 13:45:40,188 trial 7: score=2.8978 pp=180.6 tok/s size=871MiB (294.2s)
+2026-08-13 13:50:52,364 trial 8: score=1.7036 pp=104.7 tok/s size=820MiB (312.2s)
+2026-08-13 13:50:52,364 best score: 2.8978
+2026-08-13 13:50:52,364 best config: ('Q8_0', 'Q4_0', 'Q8_0', 'Q8_0', 'Q4_0', 'Q5_K', 'Q8_0', 'Q4_0', 'Q6_K', 'Q5_K', 'Q8_0', 'Q8_0', 'Q4_0', 'Q4_0', 'Q8_0', 'Q6_K', 'Q6_K', 'Q8_0', 'Q4_0', 'Q8_0', 'Q5_K', 'Q4_0', 'Q5_K', 'Q4_0', 'Q8_0', 'Q8_0')
+++ date
++ echo 'RANDOM DONE: Thu Aug 13 13:50:52 IST 2026'
+RANDOM DONE: Thu Aug 13 13:50:52 IST 2026
++ ./.venv/Scripts/python.exe baselines/qpso.py --particles 3 --generations 3 --n-prompt 128 --n-gen 32 --reps 2 --log results/v2_qpso.jsonl
+2026-08-13 13:56:02,728 gen 0 particle 0: score=2.0225 (310.2s)
+2026-08-13 14:01:17,268 gen 0 particle 1: score=2.0863 (314.5s)
+2026-08-13 14:06:39,118 gen 0 particle 2: score=2.1812 (321.8s)
+2026-08-13 14:11:55,396 gen 1 particle 0: score=1.8551 (316.3s)
+2026-08-13 14:17:34,376 gen 1 particle 1: score=1.5653 (339.0s)
+2026-08-13 14:22:22,027 gen 1 particle 2: score=2.0734 (287.7s)
+2026-08-13 14:28:16,756 gen 2 particle 0: score=2.2205 (354.7s)
+2026-08-13 14:33:12,298 gen 2 particle 1: score=1.3932 (295.5s)
+2026-08-13 14:33:51,396 candidate evaluation failed (attempt 1/2): 
+2026-08-13 14:34:22,340 candidate evaluation failed (attempt 2/2):      1,      1], type =    f32, size =    0.004 MiB
+[ 185/ 340] blk.14.attn_k.weight                 - [  1152,    256,      1,      1], type =   bf16, converting to q8_0 .. size =     0.56 MiB ->    
+2026-08-13 14:34:22,340 gen 2 particle 2 FAILED after retries (70.0s):      1,      1], type =    f32, size =    0.004 MiB
+[ 185/ 340] blk.14.attn_k.weight                 - [  1152,    256,      1,      1], type =   bf16, converting to q8_0 .. size =     0.56 MiB ->    
+2026-08-13 14:34:22,340 best score: 2.2205
+2026-08-13 14:34:22,340 best config: ('Q6_K', 'Q6_K', 'Q5_K', 'Q6_K', 'Q4_0', 'Q5_K', 'Q8_0', 'Q6_K', 'Q8_0', 'Q5_K', 'Q8_0', 'Q6_K', 'Q6_K', 'Q6_K', 'Q8_0', 'Q5_K', 'Q8_0', 'Q6_K', 'Q6_K', 'Q5_K', 'Q6_K', 'Q8_0', 'Q5_K', 'Q5_K', 'Q6_K', 'Q5_K')
+++ date
++ echo 'QPSO DONE: Thu Aug 13 14:34:22 IST 2026'
+QPSO DONE: Thu Aug 13 14:34:22 IST 2026
++ ./.venv/Scripts/python.exe study_tpe.py --trials 9 --n-prompt 128 --n-gen 32 --reps 2 --log results/v2_tpe.jsonl
+[I 2026-08-13 14:34:23,395] A new study created in memory with name: no-name-ef4cec3e-897b-4adb-bf89-72174ee85df6
+2026-08-13 14:34:38,750 candidate evaluation failed (attempt 1/2): ting to q5_1 .. size =     0.56 MiB ->     0.21 MiB
+[  10/ 340] blk.0.ffn_down.weight                - [  6912,   1152,      1,      1], type =   bf16, converting to q5_K .. size =    15.19 MiB ->    
+2026-08-13 14:40:19,510 trial 0: score=1.5139 pp=69.2 tok/s size=877MiB (356.1s)
+[I 2026-08-13 14:40:19,511] Trial 0 finished with value: 1.5139118421362001 and parameters: {'blk_0': 'Q5_K', 'blk_1': 'Q8_0', 'blk_2': 'Q4_0', 'blk_3': 'Q5_K', 'blk_4': 'Q8_0', 'blk_5': 'Q4_0', 'blk_6': 'Q8_0', 'blk_7': 'Q8_0', 'blk_8': 'Q8_0', 'blk_9': 'Q6_K', 'blk_10': 'Q6_K', 'blk_11': 'Q5_K', 'blk_12': 'Q6_K', 'blk_13': 'Q4_0', 'blk_14': 'Q4_0', 'blk_15': 'Q6_K', 'blk_16': 'Q6_K', 'blk_17': 'Q6_K', 'blk_18': 'Q4_0', 'blk_19': 'Q6_K', 'blk_20': 'Q8_0', 'blk_21': 'Q4_0', 'blk_22': 'Q5_K', 'blk_23': 'Q5_K', 'blk_24': 'Q6_K', 'blk_25': 'Q8_0'}. Best is trial 0 with value: 1.5139118421362001.
+2026-08-13 14:45:04,329 trial 1: score=1.5635 pp=71.4 tok/s size=843MiB (284.8s)
+[I 2026-08-13 14:45:04,329] Trial 1 finished with value: 1.563477095581981 and parameters: {'blk_0': 'Q6_K', 'blk_1': 'Q5_K', 'blk_2': 'Q6_K', 'blk_3': 'Q6_K', 'blk_4': 'Q6_K', 'blk_5': 'Q5_K', 'blk_6': 'Q4_0', 'blk_7': 'Q8_0', 'blk_8': 'Q5_K', 'blk_9': 'Q4_0', 'blk_10': 'Q8_0', 'blk_11': 'Q5_K', 'blk_12': 'Q8_0', 'blk_13': 'Q4_0', 'blk_14': 'Q8_0', 'blk_15': 'Q4_0', 'blk_16': 'Q4_0', 'blk_17': 'Q6_K', 'blk_18': 'Q5_K', 'blk_19': 'Q5_K', 'blk_20': 'Q4_0', 'blk_21': 'Q4_0', 'blk_22': 'Q5_K', 'blk_23': 'Q8_0', 'blk_24': 'Q5_K', 'blk_25': 'Q6_K'}. Best is trial 1 with value: 1.563477095581981.
+2026-08-13 14:49:39,752 trial 2: score=2.3899 pp=138.6 tok/s size=845MiB (275.4s)
+[I 2026-08-13 14:49:39,753] Trial 2 finished with value: 2.3898641369775984 and parameters: {'blk_0': 'Q6_K', 'blk_1': 'Q8_0', 'blk_2': 'Q8_0', 'blk_3': 'Q5_K', 'blk_4': 'Q5_K', 'blk_5': 'Q4_0', 'blk_6': 'Q4_0', 'blk_7': 'Q8_0', 'blk_8': 'Q4_0', 'blk_9': 'Q4_0', 'blk_10': 'Q8_0', 'blk_11': 'Q6_K', 'blk_12': 'Q6_K', 'blk_13': 'Q8_0', 'blk_14': 'Q5_K', 'blk_15': 'Q6_K', 'blk_16': 'Q5_K', 'blk_17': 'Q4_0', 'blk_18': 'Q5_K', 'blk_19': 'Q6_K', 'blk_20': 'Q5_K', 'blk_21': 'Q4_0', 'blk_22': 'Q6_K', 'blk_23': 'Q4_0', 'blk_24': 'Q4_0', 'blk_25': 'Q6_K'}. Best is trial 2 with value: 2.3898641369775984.
+2026-08-13 14:54:43,941 trial 3: score=2.0253 pp=117.2 tok/s size=869MiB (304.2s)
+[I 2026-08-13 14:54:43,941] Trial 3 finished with value: 2.0252643216538933 and parameters: {'blk_0': 'Q6_K', 'blk_1': 'Q6_K', 'blk_2': 'Q8_0', 'blk_3': 'Q8_0', 'blk_4': 'Q8_0', 'blk_5': 'Q6_K', 'blk_6': 'Q6_K', 'blk_7': 'Q6_K', 'blk_8': 'Q4_0', 'blk_9': 'Q5_K', 'blk_10': 'Q8_0', 'blk_11': 'Q8_0', 'blk_12': 'Q5_K', 'blk_13': 'Q4_0', 'blk_14': 'Q4_0', 'blk_15': 'Q4_0', 'blk_16': 'Q5_K', 'blk_17': 'Q6_K', 'blk_18': 'Q5_K', 'blk_19': 'Q4_0', 'blk_20': 'Q8_0', 'blk_21': 'Q5_K', 'blk_22': 'Q8_0', 'blk_23': 'Q4_0', 'blk_24': 'Q4_0', 'blk_25': 'Q8_0'}. Best is trial 2 with value: 2.3898641369775984.
+2026-08-13 14:59:58,984 trial 4: score=2.5626 pp=158.7 tok/s size=913MiB (315.0s)
+[I 2026-08-13 14:59:58,984] Trial 4 finished with value: 2.562574764322759 and parameters: {'blk_0': 'Q8_0', 'blk_1': 'Q5_K', 'blk_2': 'Q6_K', 'blk_3': 'Q4_0', 'blk_4': 'Q5_K', 'blk_5': 'Q6_K', 'blk_6': 'Q6_K', 'blk_7': 'Q8_0', 'blk_8': 'Q8_0', 'blk_9': 'Q6_K', 'blk_10': 'Q8_0', 'blk_11': 'Q8_0', 'blk_12': 'Q6_K', 'blk_13': 'Q8_0', 'blk_14': 'Q6_K', 'blk_15': 'Q6_K', 'blk_16': 'Q8_0', 'blk_17': 'Q8_0', 'blk_18': 'Q4_0', 'blk_19': 'Q4_0', 'blk_20': 'Q8_0', 'blk_21': 'Q8_0', 'blk_22': 'Q5_K', 'blk_23': 'Q5_K', 'blk_24': 'Q4_0', 'blk_25': 'Q8_0'}. Best is trial 4 with value: 2.562574764322759.
+2026-08-13 15:05:07,528 trial 5: score=1.3012 pp=62.7 tok/s size=883MiB (308.5s)
+[I 2026-08-13 15:05:07,528] Trial 5 finished with value: 1.3011702237928813 and parameters: {'blk_0': 'Q8_0', 'blk_1': 'Q8_0', 'blk_2': 'Q5_K', 'blk_3': 'Q4_0', 'blk_4': 'Q8_0', 'blk_5': 'Q5_K', 'blk_6': 'Q4_0', 'blk_7': 'Q6_K', 'blk_8': 'Q6_K', 'blk_9': 'Q8_0', 'blk_10': 'Q6_K', 'blk_11': 'Q8_0', 'blk_12': 'Q5_K', 'blk_13': 'Q6_K', 'blk_14': 'Q8_0', 'blk_15': 'Q5_K', 'blk_16': 'Q4_0', 'blk_17': 'Q5_K', 'blk_18': 'Q8_0', 'blk_19': 'Q8_0', 'blk_20': 'Q6_K', 'blk_21': 'Q4_0', 'blk_22': 'Q4_0', 'blk_23': 'Q4_0', 'blk_24': 'Q8_0', 'blk_25': 'Q8_0'}. Best is trial 4 with value: 2.562574764322759.
+2026-08-13 15:10:37,913 trial 6: score=1.5900 pp=79.6 tok/s size=858MiB (330.4s)
+[I 2026-08-13 15:10:37,913] Trial 6 finished with value: 1.5899706084280234 and parameters: {'blk_0': 'Q4_0', 'blk_1': 'Q4_0', 'blk_2': 'Q8_0', 'blk_3': 'Q8_0', 'blk_4': 'Q6_K', 'blk_5': 'Q6_K', 'blk_6': 'Q4_0', 'blk_7': 'Q6_K', 'blk_8': 'Q8_0', 'blk_9': 'Q5_K', 'blk_10': 'Q6_K', 'blk_11': 'Q4_0', 'blk_12': 'Q6_K', 'blk_13': 'Q4_0', 'blk_14': 'Q8_0', 'blk_15': 'Q6_K', 'blk_16': 'Q4_0', 'blk_17': 'Q4_0', 'blk_18': 'Q8_0', 'blk_19': 'Q4_0', 'blk_20': 'Q6_K', 'blk_21': 'Q5_K', 'blk_22': 'Q4_0', 'blk_23': 'Q8_0', 'blk_24': 'Q5_K', 'blk_25': 'Q8_0'}. Best is trial 4 with value: 2.562574764322759.
+2026-08-13 15:15:26,438 trial 7: score=2.4236 pp=142.7 tok/s size=837MiB (288.5s)
+[I 2026-08-13 15:15:26,439] Trial 7 finished with value: 2.4235856738342587 and parameters: {'blk_0': 'Q4_0', 'blk_1': 'Q8_0', 'blk_2': 'Q5_K', 'blk_3': 'Q5_K', 'blk_4': 'Q6_K', 'blk_5': 'Q4_0', 'blk_6': 'Q4_0', 'blk_7': 'Q4_0', 'blk_8': 'Q4_0', 'blk_9': 'Q6_K', 'blk_10': 'Q4_0', 'blk_11': 'Q6_K', 'blk_12': 'Q8_0', 'blk_13': 'Q6_K', 'blk_14': 'Q6_K', 'blk_15': 'Q6_K', 'blk_16': 'Q6_K', 'blk_17': 'Q8_0', 'blk_18': 'Q5_K', 'blk_19': 'Q6_K', 'blk_20': 'Q4_0', 'blk_21': 'Q5_K', 'blk_22': 'Q6_K', 'blk_23': 'Q4_0', 'blk_24': 'Q5_K', 'blk_25': 'Q4_0'}. Best is trial 4 with value: 2.562574764322759.
+2026-08-13 15:20:17,628 trial 8: score=2.4119 pp=141.9 tok/s size=854MiB (291.2s)
+[I 2026-08-13 15:20:17,628] Trial 8 finished with value: 2.411897075175053 and parameters: {'blk_0': 'Q6_K', 'blk_1': 'Q4_0', 'blk_2': 'Q8_0', 'blk_3': 'Q5_K', 'blk_4': 'Q6_K', 'blk_5': 'Q6_K', 'blk_6': 'Q5_K', 'blk_7': 'Q4_0', 'blk_8': 'Q5_K', 'blk_9': 'Q6_K', 'blk_10': 'Q4_0', 'blk_11': 'Q6_K', 'blk_12': 'Q8_0', 'blk_13': 'Q4_0', 'blk_14': 'Q5_K', 'blk_15': 'Q6_K', 'blk_16': 'Q4_0', 'blk_17': 'Q4_0', 'blk_18': 'Q5_K', 'blk_19': 'Q6_K', 'blk_20': 'Q4_0', 'blk_21': 'Q6_K', 'blk_22': 'Q8_0', 'blk_23': 'Q5_K', 'blk_24': 'Q6_K', 'blk_25': 'Q8_0'}. Best is trial 4 with value: 2.562574764322759.
+2026-08-13 15:20:17,629 best score: 2.5626
+2026-08-13 15:20:17,629 best config: {'blk_0': 'Q8_0', 'blk_1': 'Q5_K', 'blk_2': 'Q6_K', 'blk_3': 'Q4_0', 'blk_4': 'Q5_K', 'blk_5': 'Q6_K', 'blk_6': 'Q6_K', 'blk_7': 'Q8_0', 'blk_8': 'Q8_0', 'blk_9': 'Q6_K', 'blk_10': 'Q8_0', 'blk_11': 'Q8_0', 'blk_12': 'Q6_K', 'blk_13': 'Q8_0', 'blk_14': 'Q6_K', 'blk_15': 'Q6_K', 'blk_16': 'Q8_0', 'blk_17': 'Q8_0', 'blk_18': 'Q4_0', 'blk_19': 'Q4_0', 'blk_20': 'Q8_0', 'blk_21': 'Q8_0', 'blk_22': 'Q5_K', 'blk_23': 'Q5_K', 'blk_24': 'Q4_0', 'blk_25': 'Q8_0'}
+++ date
++ echo 'TPE DONE: Thu Aug 13 15:20:17 IST 2026'
+TPE DONE: Thu Aug 13 15:20:17 IST 2026
++ echo ALL_DONE
+ALL_DONE

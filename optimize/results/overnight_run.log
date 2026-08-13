@@ -1,0 +1,325 @@
+++ date
++ echo 'START: Sun Aug  9 12:16:06 IST 2026'
+START: Sun Aug  9 12:16:06 IST 2026
++ ./.venv/Scripts/python.exe baselines/random_search.py --trials 24 --n-prompt 128 --n-gen 32 --reps 2 --log results/overnight_random.jsonl
+2026-08-09 12:18:34,658 trial 0: score=2.6160 pp=159.8 tok/s size=888MiB (148.0s)
+2026-08-09 12:21:28,350 trial 1: score=2.0859 pp=126.3 tok/s size=843MiB (173.7s)
+2026-08-09 12:24:34,785 trial 2: score=0.8638 pp=35.2 tok/s size=847MiB (186.4s)
+2026-08-09 12:27:24,060 trial 3: score=2.2381 pp=126.4 tok/s size=832MiB (169.3s)
+2026-08-09 12:30:01,682 trial 4: score=2.4525 pp=152.2 tok/s size=800MiB (157.6s)
+2026-08-09 12:33:01,584 trial 5: score=2.0300 pp=119.1 tok/s size=871MiB (179.9s)
+2026-08-09 12:36:04,587 trial 6: score=2.0009 pp=122.7 tok/s size=866MiB (183.0s)
+2026-08-09 12:39:05,343 trial 7: score=2.6396 pp=161.6 tok/s size=871MiB (180.8s)
+2026-08-09 12:42:15,758 trial 8: score=1.0230 pp=50.7 tok/s size=820MiB (190.4s)
+2026-08-09 12:45:06,138 trial 9: score=2.2552 pp=128.0 tok/s size=860MiB (170.4s)
+2026-08-09 12:48:26,036 trial 10: score=2.5823 pp=154.1 tok/s size=875MiB (199.9s)
+2026-08-09 12:51:11,675 trial 11: score=2.2349 pp=141.2 tok/s size=847MiB (165.6s)
+2026-08-09 12:53:52,702 trial 12: score=2.1463 pp=122.2 tok/s size=847MiB (161.0s)
+2026-08-09 12:56:47,951 trial 13: score=2.1555 pp=123.2 tok/s size=884MiB (175.2s)
+2026-08-09 12:59:42,956 trial 14: score=2.2630 pp=146.3 tok/s size=839MiB (175.0s)
+2026-08-09 13:03:04,573 trial 15: score=1.5923 pp=78.4 tok/s size=881MiB (201.6s)
+2026-08-09 13:06:02,491 trial 16: score=2.4310 pp=144.9 tok/s size=856MiB (177.9s)
+2026-08-09 13:09:10,519 trial 17: score=2.3425 pp=152.7 tok/s size=845MiB (188.0s)
+2026-08-09 13:12:12,993 trial 18: score=2.6885 pp=162.3 tok/s size=845MiB (182.5s)
+2026-08-09 13:15:20,659 trial 19: score=2.1100 pp=125.2 tok/s size=839MiB (187.7s)
+2026-08-09 13:18:26,104 trial 20: score=2.0496 pp=117.5 tok/s size=839MiB (185.4s)
+2026-08-09 13:21:32,340 trial 21: score=1.9930 pp=110.2 tok/s size=879MiB (186.2s)
+2026-08-09 13:25:00,995 trial 22: score=1.3649 pp=66.3 tok/s size=892MiB (208.7s)
+2026-08-09 13:28:00,939 trial 23: score=2.5419 pp=156.7 tok/s size=862MiB (179.9s)
+2026-08-09 13:28:00,939 best score: 2.6885
+2026-08-09 13:28:00,939 best config: ('Q4_0', 'Q8_0', 'Q4_0', 'Q4_0', 'Q8_0', 'Q5_K', 'Q4_0', 'Q8_0', 'Q8_0', 'Q8_0', 'Q4_0', 'Q8_0', 'Q6_K', 'Q6_K', 'Q4_0', 'Q6_K', 'Q4_0', 'Q4_0', 'Q6_K', 'Q4_0', 'Q6_K', 'Q6_K', 'Q5_K', 'Q4_0', 'Q5_K', 'Q6_K')
+++ date
++ echo 'RANDOM DONE: Sun Aug  9 13:28:00 IST 2026'
+RANDOM DONE: Sun Aug  9 13:28:00 IST 2026
++ ./.venv/Scripts/python.exe baselines/qpso.py --particles 4 --generations 6 --n-prompt 128 --n-gen 32 --reps 2 --log results/overnight_qpso.jsonl
+2026-08-09 13:31:05,141 gen 0 particle 0: score=1.9684 (184.1s)
+2026-08-09 13:34:30,357 gen 0 particle 1: score=1.5945 (205.2s)
+2026-08-09 13:37:46,530 gen 0 particle 2: score=1.9783 (196.2s)
+2026-08-09 13:41:55,383 gen 0 particle 3: score=1.3189 (248.9s)
+2026-08-09 13:46:00,869 gen 1 particle 0: score=0.8532 (245.5s)
+2026-08-09 13:49:39,619 gen 1 particle 1: score=1.0821 (218.7s)
+2026-08-09 13:53:42,972 gen 1 particle 2: score=1.0807 (243.4s)
+2026-08-09 13:56:47,323 gen 1 particle 3: score=2.1473 (184.4s)
+2026-08-09 13:59:49,447 gen 2 particle 0: score=1.7271 (182.1s)
+2026-08-09 14:02:50,318 gen 2 particle 1: score=2.3048 (180.9s)
+2026-08-09 14:05:37,032 gen 2 particle 2: score=1.9701 (166.7s)
+2026-08-09 14:08:53,366 gen 2 particle 3: score=1.9138 (196.3s)
+2026-08-09 14:11:58,547 gen 3 particle 0: score=1.9730 (185.2s)
+2026-08-09 14:15:07,306 gen 3 particle 1: score=2.1736 (188.8s)
+2026-08-09 14:18:13,455 gen 3 particle 2: score=1.9662 (186.1s)
+2026-08-09 14:21:13,968 gen 3 particle 3: score=1.4635 (180.5s)
+2026-08-09 14:24:22,706 gen 4 particle 0: score=1.9619 (188.7s)
+2026-08-09 14:27:37,319 gen 4 particle 1: score=2.0520 (194.6s)
+2026-08-09 14:30:54,198 gen 4 particle 2: score=2.2627 (196.9s)
+2026-08-09 14:34:39,936 gen 4 particle 3: score=1.5926 (225.7s)
+2026-08-09 14:37:40,650 gen 5 particle 0: score=2.3291 (180.7s)
+2026-08-09 14:40:59,678 gen 5 particle 1: score=2.2175 (199.0s)
+2026-08-09 14:44:35,762 gen 5 particle 2: score=2.0251 (216.1s)
+2026-08-09 14:47:58,158 gen 5 particle 3: score=1.6573 (202.4s)
+2026-08-09 14:47:58,158 best score: 2.3291
+2026-08-09 14:47:58,158 best config: ('Q5_K', 'Q8_0', 'Q6_K', 'Q8_0', 'Q8_0', 'Q6_K', 'Q8_0', 'Q5_K', 'Q6_K', 'Q5_K', 'Q6_K', 'Q5_K', 'Q5_K', 'Q6_K', 'Q6_K', 'Q6_K', 'Q8_0', 'Q8_0', 'Q5_K', 'Q6_K', 'Q5_K', 'Q8_0', 'Q8_0', 'Q6_K', 'Q4_0', 'Q6_K')
+++ date
++ echo 'QPSO DONE: Sun Aug  9 14:47:58 IST 2026'
+QPSO DONE: Sun Aug  9 14:47:58 IST 2026
++ ./.venv/Scripts/python.exe study_tpe.py --trials 24 --n-prompt 128 --n-gen 32 --reps 2 --log results/overnight_tpe.jsonl
+[I 2026-08-09 14:47:58,639] A new study created in memory with name: no-name-eacb9eda-8e48-405b-a33b-67d012bf675a
+2026-08-09 14:51:13,968 trial 0: score=2.6110 pp=156.4 tok/s size=877MiB (195.3s)
+[I 2026-08-09 14:51:13,968] Trial 0 finished with value: 2.610975594023467 and parameters: {'blk_0': 'Q5_K', 'blk_1': 'Q8_0', 'blk_2': 'Q4_0', 'blk_3': 'Q5_K', 'blk_4': 'Q8_0', 'blk_5': 'Q4_0', 'blk_6': 'Q8_0', 'blk_7': 'Q8_0', 'blk_8': 'Q8_0', 'blk_9': 'Q6_K', 'blk_10': 'Q6_K', 'blk_11': 'Q5_K', 'blk_12': 'Q6_K', 'blk_13': 'Q4_0', 'blk_14': 'Q4_0', 'blk_15': 'Q6_K', 'blk_16': 'Q6_K', 'blk_17': 'Q6_K', 'blk_18': 'Q4_0', 'blk_19': 'Q6_K', 'blk_20': 'Q8_0', 'blk_21': 'Q4_0', 'blk_22': 'Q5_K', 'blk_23': 'Q5_K', 'blk_24': 'Q6_K', 'blk_25': 'Q8_0'}. Best is trial 0 with value: 2.610975594023467.
+2026-08-09 14:53:51,256 trial 1: score=2.2053 pp=123.9 tok/s size=843MiB (157.3s)
+[I 2026-08-09 14:53:51,257] Trial 1 finished with value: 2.2052856260298928 and parameters: {'blk_0': 'Q6_K', 'blk_1': 'Q5_K', 'blk_2': 'Q6_K', 'blk_3': 'Q6_K', 'blk_4': 'Q6_K', 'blk_5': 'Q5_K', 'blk_6': 'Q4_0', 'blk_7': 'Q8_0', 'blk_8': 'Q5_K', 'blk_9': 'Q4_0', 'blk_10': 'Q8_0', 'blk_11': 'Q5_K', 'blk_12': 'Q8_0', 'blk_13': 'Q4_0', 'blk_14': 'Q8_0', 'blk_15': 'Q4_0', 'blk_16': 'Q4_0', 'blk_17': 'Q6_K', 'blk_18': 'Q5_K', 'blk_19': 'Q5_K', 'blk_20': 'Q4_0', 'blk_21': 'Q4_0', 'blk_22': 'Q5_K', 'blk_23': 'Q8_0', 'blk_24': 'Q5_K', 'blk_25': 'Q6_K'}. Best is trial 0 with value: 2.610975594023467.
+2026-08-09 14:57:24,468 trial 2: score=2.0647 pp=112.7 tok/s size=845MiB (213.2s)
+[I 2026-08-09 14:57:24,468] Trial 2 finished with value: 2.064702838537739 and parameters: {'blk_0': 'Q6_K', 'blk_1': 'Q8_0', 'blk_2': 'Q8_0', 'blk_3': 'Q5_K', 'blk_4': 'Q5_K', 'blk_5': 'Q4_0', 'blk_6': 'Q4_0', 'blk_7': 'Q8_0', 'blk_8': 'Q4_0', 'blk_9': 'Q4_0', 'blk_10': 'Q8_0', 'blk_11': 'Q6_K', 'blk_12': 'Q6_K', 'blk_13': 'Q8_0', 'blk_14': 'Q5_K', 'blk_15': 'Q6_K', 'blk_16': 'Q5_K', 'blk_17': 'Q4_0', 'blk_18': 'Q5_K', 'blk_19': 'Q6_K', 'blk_20': 'Q5_K', 'blk_21': 'Q4_0', 'blk_22': 'Q6_K', 'blk_23': 'Q4_0', 'blk_24': 'Q4_0', 'blk_25': 'Q6_K'}. Best is trial 0 with value: 2.610975594023467.
+2026-08-09 15:00:38,554 trial 3: score=1.7281 pp=89.1 tok/s size=869MiB (194.1s)
+[I 2026-08-09 15:00:38,554] Trial 3 finished with value: 1.7281320997112666 and parameters: {'blk_0': 'Q6_K', 'blk_1': 'Q6_K', 'blk_2': 'Q8_0', 'blk_3': 'Q8_0', 'blk_4': 'Q8_0', 'blk_5': 'Q6_K', 'blk_6': 'Q6_K', 'blk_7': 'Q6_K', 'blk_8': 'Q4_0', 'blk_9': 'Q5_K', 'blk_10': 'Q8_0', 'blk_11': 'Q8_0', 'blk_12': 'Q5_K', 'blk_13': 'Q4_0', 'blk_14': 'Q4_0', 'blk_15': 'Q4_0', 'blk_16': 'Q5_K', 'blk_17': 'Q6_K', 'blk_18': 'Q5_K', 'blk_19': 'Q4_0', 'blk_20': 'Q8_0', 'blk_21': 'Q5_K', 'blk_22': 'Q8_0', 'blk_23': 'Q4_0', 'blk_24': 'Q4_0', 'blk_25': 'Q8_0'}. Best is trial 0 with value: 2.610975594023467.
+2026-08-09 15:03:57,665 trial 4: score=2.0142 pp=115.1 tok/s size=913MiB (199.1s)
+[I 2026-08-09 15:03:57,666] Trial 4 finished with value: 2.0141881261747976 and parameters: {'blk_0': 'Q8_0', 'blk_1': 'Q5_K', 'blk_2': 'Q6_K', 'blk_3': 'Q4_0', 'blk_4': 'Q5_K', 'blk_5': 'Q6_K', 'blk_6': 'Q6_K', 'blk_7': 'Q8_0', 'blk_8': 'Q8_0', 'blk_9': 'Q6_K', 'blk_10': 'Q8_0', 'blk_11': 'Q8_0', 'blk_12': 'Q6_K', 'blk_13': 'Q8_0', 'blk_14': 'Q6_K', 'blk_15': 'Q6_K', 'blk_16': 'Q8_0', 'blk_17': 'Q8_0', 'blk_18': 'Q4_0', 'blk_19': 'Q4_0', 'blk_20': 'Q8_0', 'blk_21': 'Q8_0', 'blk_22': 'Q5_K', 'blk_23': 'Q5_K', 'blk_24': 'Q4_0', 'blk_25': 'Q8_0'}. Best is trial 0 with value: 2.610975594023467.
+2026-08-09 15:07:22,784 trial 5: score=2.3971 pp=151.3 tok/s size=883MiB (205.1s)
+[I 2026-08-09 15:07:22,785] Trial 5 finished with value: 2.397143676233747 and parameters: {'blk_0': 'Q8_0', 'blk_1': 'Q8_0', 'blk_2': 'Q5_K', 'blk_3': 'Q4_0', 'blk_4': 'Q8_0', 'blk_5': 'Q5_K', 'blk_6': 'Q4_0', 'blk_7': 'Q6_K', 'blk_8': 'Q6_K', 'blk_9': 'Q8_0', 'blk_10': 'Q6_K', 'blk_11': 'Q8_0', 'blk_12': 'Q5_K', 'blk_13': 'Q6_K', 'blk_14': 'Q8_0', 'blk_15': 'Q5_K', 'blk_16': 'Q4_0', 'blk_17': 'Q5_K', 'blk_18': 'Q8_0', 'blk_19': 'Q8_0', 'blk_20': 'Q6_K', 'blk_21': 'Q4_0', 'blk_22': 'Q4_0', 'blk_23': 'Q4_0', 'blk_24': 'Q8_0', 'blk_25': 'Q8_0'}. Best is trial 0 with value: 2.610975594023467.
+2026-08-09 15:10:48,484 trial 6: score=1.8863 pp=101.6 tok/s size=858MiB (205.7s)
+[I 2026-08-09 15:10:48,484] Trial 6 finished with value: 1.8862891917194176 and parameters: {'blk_0': 'Q4_0', 'blk_1': 'Q4_0', 'blk_2': 'Q8_0', 'blk_3': 'Q8_0', 'blk_4': 'Q6_K', 'blk_5': 'Q6_K', 'blk_6': 'Q4_0', 'blk_7': 'Q6_K', 'blk_8': 'Q8_0', 'blk_9': 'Q5_K', 'blk_10': 'Q6_K', 'blk_11': 'Q4_0', 'blk_12': 'Q6_K', 'blk_13': 'Q4_0', 'blk_14': 'Q8_0', 'blk_15': 'Q6_K', 'blk_16': 'Q4_0', 'blk_17': 'Q4_0', 'blk_18': 'Q8_0', 'blk_19': 'Q4_0', 'blk_20': 'Q6_K', 'blk_21': 'Q5_K', 'blk_22': 'Q4_0', 'blk_23': 'Q8_0', 'blk_24': 'Q5_K', 'blk_25': 'Q8_0'}. Best is trial 0 with value: 2.610975594023467.
+2026-08-09 15:13:49,450 trial 7: score=2.2965 pp=137.1 tok/s size=837MiB (181.0s)
+[I 2026-08-09 15:13:49,450] Trial 7 finished with value: 2.296482452898174 and parameters: {'blk_0': 'Q4_0', 'blk_1': 'Q8_0', 'blk_2': 'Q5_K', 'blk_3': 'Q5_K', 'blk_4': 'Q6_K', 'blk_5': 'Q4_0', 'blk_6': 'Q4_0', 'blk_7': 'Q4_0', 'blk_8': 'Q4_0', 'blk_9': 'Q6_K', 'blk_10': 'Q4_0', 'blk_11': 'Q6_K', 'blk_12': 'Q8_0', 'blk_13': 'Q6_K', 'blk_14': 'Q6_K', 'blk_15': 'Q6_K', 'blk_16': 'Q6_K', 'blk_17': 'Q8_0', 'blk_18': 'Q5_K', 'blk_19': 'Q6_K', 'blk_20': 'Q4_0', 'blk_21': 'Q5_K', 'blk_22': 'Q6_K', 'blk_23': 'Q4_0', 'blk_24': 'Q5_K', 'blk_25': 'Q4_0'}. Best is trial 0 with value: 2.610975594023467.
+2026-08-09 15:14:12,316 candidate evaluation failed (attempt 1/2): 
+2026-08-09 15:15:45,307 candidate evaluation failed (attempt 2/2): [
+  {
+    "build_commit": "fa72aec",
+    "build_number": 1,
+    "cpu_info": "CPU",
+    "gpu_info": "",
+    "backends": "CPU",
+    "model_filename": "//data/local/tmp/bench/cand_4d08591a.gguf",
+    "mo
+[W 2026-08-09 15:15:45,308] Trial 8 failed with parameters: {'blk_0': 'Q6_K', 'blk_1': 'Q4_0', 'blk_2': 'Q8_0', 'blk_3': 'Q5_K', 'blk_4': 'Q6_K', 'blk_5': 'Q6_K', 'blk_6': 'Q5_K', 'blk_7': 'Q4_0', 'blk_8': 'Q5_K', 'blk_9': 'Q6_K', 'blk_10': 'Q4_0', 'blk_11': 'Q6_K', 'blk_12': 'Q8_0', 'blk_13': 'Q4_0', 'blk_14': 'Q5_K', 'blk_15': 'Q6_K', 'blk_16': 'Q4_0', 'blk_17': 'Q4_0', 'blk_18': 'Q5_K', 'blk_19': 'Q6_K', 'blk_20': 'Q4_0', 'blk_21': 'Q6_K', 'blk_22': 'Q8_0', 'blk_23': 'Q5_K', 'blk_24': 'Q6_K', 'blk_25': 'Q8_0'} because of the following error: BenchError('[\n  {\n    "build_commit": "fa72aec",\n    "build_number": 1,\n    "cpu_info": "CPU",\n    "gpu_info": "",\n    "backends": "CPU",\n    "model_filename": "//data/local/tmp/bench/cand_4d08591a.gguf",\n    "model_type": "gemma3 1B Q8_0",\n    "model_size": 895168768,\n    "model_n_params": 999885952,\n    "n_batch": 2048,\n    "n_ubatch": 512,\n    "n_threads": 8,\n    "cpu_mask": "0x0",\n    "cpu_strict": false,\n    "poll": 50,\n    "type_k": "f16",\n    "type_v": "f16",\n    "n_gpu_layers": -1,\n    "n_cpu_moe": 0,\n    "split_mode": "layer",\n    "main_gpu": 0,\n    "no_kv_offload": false,\n    "flash_attn": -1,\n    "devices": "auto",\n    "tensor_split": "0.00",\n    "tensor_buft_overrides": "none",\n    "load_mode": "mmap",\n    "embeddings": false,\n    "no_op_offload": 0,\n    "no_host": false,\n    "fit_target": 0,\n    "fit_min_ctx": 0,\n    "n_prompt": 128,\n    "n_gen": 0,\n    "n_depth": 0,\n    "test_time": "2026-08-09T09:44:46Z",\n    "avg_ns": 1865885356,\n    "stddev_ns": 321434728,\n    "avg_ts": 69.633387,\n    "stddev_ts": 11.995693,\n    "samples_ns": [ 2093174032, 1638596680 ],\n    "samples_ts": [ 61.1512, 78.1156 ]\n  }').
+Traceback (most recent call last):
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\.venv\Lib\site-packages\optuna\study\_optimize.py", line 206, in _run_trial
+    value_or_values = func(trial)
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\study_tpe.py", line 39, in objective
+    obj = score_candidate(candidate, n_prompt=n_prompt, n_gen=n_gen, reps=reps)
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\fitness.py", line 66, in score_candidate
+    raise last_error  # same failure twice -- genuinely broken, not a flake
+    ^^^^^^^^^^^^^^^^
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\fitness.py", line 49, in score_candidate
+    m: Measurement = evaluate(candidate, n_prompt=n_prompt, n_gen=n_gen, reps=reps, out_name=out_name)
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\quantize_and_bench.py", line 113, in evaluate
+    measurement = _bench(out_name, n_prompt, n_gen, reps)
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\quantize_and_bench.py", line 82, in _bench
+    raise BenchError(result.stdout[-2000:] + result.stderr[-2000:])
+quantize_and_bench.BenchError: [
+  {
+    "build_commit": "fa72aec",
+    "build_number": 1,
+    "cpu_info": "CPU",
+    "gpu_info": "",
+    "backends": "CPU",
+    "model_filename": "//data/local/tmp/bench/cand_4d08591a.gguf",
+    "model_type": "gemma3 1B Q8_0",
+    "model_size": 895168768,
+    "model_n_params": 999885952,
+    "n_batch": 2048,
+    "n_ubatch": 512,
+    "n_threads": 8,
+    "cpu_mask": "0x0",
+    "cpu_strict": false,
+    "poll": 50,
+    "type_k": "f16",
+    "type_v": "f16",
+    "n_gpu_layers": -1,
+    "n_cpu_moe": 0,
+    "split_mode": "layer",
+    "main_gpu": 0,
+    "no_kv_offload": false,
+    "flash_attn": -1,
+    "devices": "auto",
+    "tensor_split": "0.00",
+    "tensor_buft_overrides": "none",
+    "load_mode": "mmap",
+    "embeddings": false,
+    "no_op_offload": 0,
+    "no_host": false,
+    "fit_target": 0,
+    "fit_min_ctx": 0,
+    "n_prompt": 128,
+    "n_gen": 0,
+    "n_depth": 0,
+    "test_time": "2026-08-09T09:44:46Z",
+    "avg_ns": 1865885356,
+    "stddev_ns": 321434728,
+    "avg_ts": 69.633387,
+    "stddev_ts": 11.995693,
+    "samples_ns": [ 2093174032, 1638596680 ],
+    "samples_ts": [ 61.1512, 78.1156 ]
+  }
+[W 2026-08-09 15:15:45,319] Trial 8 failed with value None.
+[W 2026-08-09 15:16:22,426] Trial 9 failed with parameters: {'blk_0': 'Q8_0', 'blk_1': 'Q8_0', 'blk_2': 'Q6_K', 'blk_3': 'Q8_0', 'blk_4': 'Q8_0', 'blk_5': 'Q8_0', 'blk_6': 'Q5_K', 'blk_7': 'Q8_0', 'blk_8': 'Q5_K', 'blk_9': 'Q6_K', 'blk_10': 'Q8_0', 'blk_11': 'Q4_0', 'blk_12': 'Q4_0', 'blk_13': 'Q5_K', 'blk_14': 'Q6_K', 'blk_15': 'Q5_K', 'blk_16': 'Q8_0', 'blk_17': 'Q5_K', 'blk_18': 'Q5_K', 'blk_19': 'Q5_K', 'blk_20': 'Q8_0', 'blk_21': 'Q8_0', 'blk_22': 'Q5_K', 'blk_23': 'Q4_0', 'blk_24': 'Q5_K', 'blk_25': 'Q8_0'} because of the following error: TimeoutExpired(['adb', 'wait-for-device'], 30).
+Traceback (most recent call last):
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\.venv\Lib\site-packages\optuna\study\_optimize.py", line 206, in _run_trial
+    value_or_values = func(trial)
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\study_tpe.py", line 39, in objective
+    obj = score_candidate(candidate, n_prompt=n_prompt, n_gen=n_gen, reps=reps)
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\fitness.py", line 49, in score_candidate
+    m: Measurement = evaluate(candidate, n_prompt=n_prompt, n_gen=n_gen, reps=reps, out_name=out_name)
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\quantize_and_bench.py", line 112, in evaluate
+    _quantize(candidate, out_name)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\quantize_and_bench.py", line 53, in _quantize
+    push(str(local_path), type_file_name)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\device.py", line 64, in push
+    result = _run_with_retry(["adb", "push", local_path, remote(remote_name)], timeout=60)
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\device.py", line 50, in _run_with_retry
+    _restart_adb_server()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\device.py", line 34, in _restart_adb_server
+    subprocess.run(["adb", "wait-for-device"], capture_output=True, env=_ENV, timeout=30)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krish\AppData\Local\Programs\Python\Python313\Lib\subprocess.py", line 556, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krish\AppData\Local\Programs\Python\Python313\Lib\subprocess.py", line 1219, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krish\AppData\Local\Programs\Python\Python313\Lib\subprocess.py", line 1640, in _communicate
+    raise TimeoutExpired(self.args, orig_timeout)
+subprocess.TimeoutExpired: Command '['adb', 'wait-for-device']' timed out after 30 seconds
+[W 2026-08-09 15:16:22,441] Trial 9 failed with value None.
+2026-08-09 15:16:47,272 candidate evaluation failed (attempt 1/2): 
+2026-08-09 15:20:58,849 trial 10: score=0.7639 pp=27.2 tok/s size=845MiB (276.4s)
+[I 2026-08-09 15:20:58,849] Trial 10 finished with value: 0.7638849934769362 and parameters: {'blk_0': 'Q8_0', 'blk_1': 'Q8_0', 'blk_2': 'Q5_K', 'blk_3': 'Q6_K', 'blk_4': 'Q5_K', 'blk_5': 'Q4_0', 'blk_6': 'Q8_0', 'blk_7': 'Q8_0', 'blk_8': 'Q6_K', 'blk_9': 'Q5_K', 'blk_10': 'Q8_0', 'blk_11': 'Q4_0', 'blk_12': 'Q4_0', 'blk_13': 'Q5_K', 'blk_14': 'Q5_K', 'blk_15': 'Q5_K', 'blk_16': 'Q4_0', 'blk_17': 'Q4_0', 'blk_18': 'Q6_K', 'blk_19': 'Q6_K', 'blk_20': 'Q6_K', 'blk_21': 'Q5_K', 'blk_22': 'Q5_K', 'blk_23': 'Q4_0', 'blk_24': 'Q4_0', 'blk_25': 'Q8_0'}. Best is trial 0 with value: 2.610975594023467.
+2026-08-09 15:24:13,858 trial 11: score=1.8787 pp=98.1 tok/s size=871MiB (195.0s)
+[I 2026-08-09 15:24:13,859] Trial 11 finished with value: 1.878689976869791 and parameters: {'blk_0': 'Q8_0', 'blk_1': 'Q5_K', 'blk_2': 'Q8_0', 'blk_3': 'Q5_K', 'blk_4': 'Q8_0', 'blk_5': 'Q6_K', 'blk_6': 'Q5_K', 'blk_7': 'Q6_K', 'blk_8': 'Q6_K', 'blk_9': 'Q5_K', 'blk_10': 'Q6_K', 'blk_11': 'Q4_0', 'blk_12': 'Q8_0', 'blk_13': 'Q4_0', 'blk_14': 'Q5_K', 'blk_15': 'Q8_0', 'blk_16': 'Q8_0', 'blk_17': 'Q4_0', 'blk_18': 'Q6_K', 'blk_19': 'Q6_K', 'blk_20': 'Q4_0', 'blk_21': 'Q5_K', 'blk_22': 'Q8_0', 'blk_23': 'Q4_0', 'blk_24': 'Q6_K', 'blk_25': 'Q4_0'}. Best is trial 0 with value: 2.610975594023467.
+2026-08-09 15:27:14,712 trial 12: score=1.9911 pp=109.9 tok/s size=851MiB (180.8s)
+[I 2026-08-09 15:27:14,712] Trial 12 finished with value: 1.9910683965696654 and parameters: {'blk_0': 'Q5_K', 'blk_1': 'Q6_K', 'blk_2': 'Q4_0', 'blk_3': 'Q5_K', 'blk_4': 'Q4_0', 'blk_5': 'Q8_0', 'blk_6': 'Q8_0', 'blk_7': 'Q5_K', 'blk_8': 'Q8_0', 'blk_9': 'Q6_K', 'blk_10': 'Q5_K', 'blk_11': 'Q5_K', 'blk_12': 'Q4_0', 'blk_13': 'Q5_K', 'blk_14': 'Q4_0', 'blk_15': 'Q8_0', 'blk_16': 'Q6_K', 'blk_17': 'Q6_K', 'blk_18': 'Q4_0', 'blk_19': 'Q5_K', 'blk_20': 'Q8_0', 'blk_21': 'Q6_K', 'blk_22': 'Q5_K', 'blk_23': 'Q5_K', 'blk_24': 'Q6_K', 'blk_25': 'Q5_K'}. Best is trial 0 with value: 2.610975594023467.
+2026-08-09 15:30:56,063 trial 13: score=2.2759 pp=135.8 tok/s size=898MiB (221.3s)
+[I 2026-08-09 15:30:56,063] Trial 13 finished with value: 2.275874947671534 and parameters: {'blk_0': 'Q5_K', 'blk_1': 'Q8_0', 'blk_2': 'Q4_0', 'blk_3': 'Q4_0', 'blk_4': 'Q8_0', 'blk_5': 'Q5_K', 'blk_6': 'Q8_0', 'blk_7': 'Q5_K', 'blk_8': 'Q6_K', 'blk_9': 'Q8_0', 'blk_10': 'Q6_K', 'blk_11': 'Q8_0', 'blk_12': 'Q5_K', 'blk_13': 'Q6_K', 'blk_14': 'Q8_0', 'blk_15': 'Q5_K', 'blk_16': 'Q6_K', 'blk_17': 'Q5_K', 'blk_18': 'Q8_0', 'blk_19': 'Q8_0', 'blk_20': 'Q6_K', 'blk_21': 'Q4_0', 'blk_22': 'Q4_0', 'blk_23': 'Q6_K', 'blk_24': 'Q8_0', 'blk_25': 'Q8_0'}. Best is trial 0 with value: 2.610975594023467.
+2026-08-09 15:33:58,717 trial 14: score=1.7152 pp=93.8 tok/s size=824MiB (182.6s)
+[I 2026-08-09 15:33:58,717] Trial 14 finished with value: 1.7152105184037911 and parameters: {'blk_0': 'Q5_K', 'blk_1': 'Q8_0', 'blk_2': 'Q4_0', 'blk_3': 'Q4_0', 'blk_4': 'Q8_0', 'blk_5': 'Q5_K', 'blk_6': 'Q5_K', 'blk_7': 'Q4_0', 'blk_8': 'Q5_K', 'blk_9': 'Q8_0', 'blk_10': 'Q6_K', 'blk_11': 'Q5_K', 'blk_12': 'Q5_K', 'blk_13': 'Q6_K', 'blk_14': 'Q4_0', 'blk_15': 'Q5_K', 'blk_16': 'Q6_K', 'blk_17': 'Q5_K', 'blk_18': 'Q4_0', 'blk_19': 'Q8_0', 'blk_20': 'Q5_K', 'blk_21': 'Q4_0', 'blk_22': 'Q4_0', 'blk_23': 'Q5_K', 'blk_24': 'Q8_0', 'blk_25': 'Q5_K'}. Best is trial 0 with value: 2.610975594023467.
+2026-08-09 15:34:45,308 candidate evaluation failed (attempt 1/2): 
+2026-08-09 15:35:35,444 candidate evaluation failed (attempt 2/2): [
+  {
+    "build_commit": "fa72aec",
+    "build_number": 1,
+    "cpu_info": "CPU",
+    "gpu_info": "",
+    "backends": "CPU",
+    "model_filename": "//data/local/tmp/bench/cand_5e95b39d.gguf",
+    "mo
+[W 2026-08-09 15:35:35,444] Trial 15 failed with parameters: {'blk_0': 'Q5_K', 'blk_1': 'Q4_0', 'blk_2': 'Q5_K', 'blk_3': 'Q4_0', 'blk_4': 'Q8_0', 'blk_5': 'Q8_0', 'blk_6': 'Q8_0', 'blk_7': 'Q6_K', 'blk_8': 'Q8_0', 'blk_9': 'Q8_0', 'blk_10': 'Q6_K', 'blk_11': 'Q8_0', 'blk_12': 'Q5_K', 'blk_13': 'Q6_K', 'blk_14': 'Q4_0', 'blk_15': 'Q5_K', 'blk_16': 'Q4_0', 'blk_17': 'Q5_K', 'blk_18': 'Q8_0', 'blk_19': 'Q8_0', 'blk_20': 'Q6_K', 'blk_21': 'Q4_0', 'blk_22': 'Q4_0', 'blk_23': 'Q6_K', 'blk_24': 'Q8_0', 'blk_25': 'Q8_0'} because of the following error: BenchError('[\n  {\n    "build_commit": "fa72aec",\n    "build_number": 1,\n    "cpu_info": "CPU",\n    "gpu_info": "",\n    "backends": "CPU",\n    "model_filename": "//data/local/tmp/bench/cand_5e95b39d.gguf",\n    "model_type": "gemma3 1B Q8_0",\n    "model_size": 926401792,\n    "model_n_params": 999885952,\n    "n_batch": 2048,\n    "n_ubatch": 512,\n    "n_threads": 8,\n    "cpu_mask": "0x0",\n    "cpu_strict": false,\n    "poll": 50,\n    "type_k": "f16",\n    "type_v": "f16",\n    "n_gpu_layers": -1,\n    "n_cpu_moe": 0,\n    "split_mode": "layer",\n    "main_gpu": 0,\n    "no_kv_offload": false,\n    "flash_attn": -1,\n    "devices": "auto",\n    "tensor_split": "0.00",\n    "tensor_buft_overrides": "none",\n    "load_mode": "mmap",\n    "embeddings": false,\n    "no_op_offload": 0,\n    "no_host": false,\n    "fit_target": 0,\n    "fit_min_ctx": 0,\n    "n_prompt": 128,\n    "n_gen": 0,\n    "n_depth": 0,\n    "test_time": "2026-08-09T10:05:22Z",\n    "avg_ns": 3710932720,\n    "stddev_ns": 986419513,\n    "avg_ts": 35.755883,\n    "stddev_ts": 9.504430,\n    "samples_ns": [ 3013428793, 4408436647 ],\n    "samples_ts": [ 42.4765, 29.0352 ]\n  }').
+Traceback (most recent call last):
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\.venv\Lib\site-packages\optuna\study\_optimize.py", line 206, in _run_trial
+    value_or_values = func(trial)
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\study_tpe.py", line 39, in objective
+    obj = score_candidate(candidate, n_prompt=n_prompt, n_gen=n_gen, reps=reps)
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\fitness.py", line 66, in score_candidate
+    raise last_error  # same failure twice -- genuinely broken, not a flake
+    ^^^^^^^^^^^^^^^^
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\fitness.py", line 49, in score_candidate
+    m: Measurement = evaluate(candidate, n_prompt=n_prompt, n_gen=n_gen, reps=reps, out_name=out_name)
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\quantize_and_bench.py", line 113, in evaluate
+    measurement = _bench(out_name, n_prompt, n_gen, reps)
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\quantize_and_bench.py", line 82, in _bench
+    raise BenchError(result.stdout[-2000:] + result.stderr[-2000:])
+quantize_and_bench.BenchError: [
+  {
+    "build_commit": "fa72aec",
+    "build_number": 1,
+    "cpu_info": "CPU",
+    "gpu_info": "",
+    "backends": "CPU",
+    "model_filename": "//data/local/tmp/bench/cand_5e95b39d.gguf",
+    "model_type": "gemma3 1B Q8_0",
+    "model_size": 926401792,
+    "model_n_params": 999885952,
+    "n_batch": 2048,
+    "n_ubatch": 512,
+    "n_threads": 8,
+    "cpu_mask": "0x0",
+    "cpu_strict": false,
+    "poll": 50,
+    "type_k": "f16",
+    "type_v": "f16",
+    "n_gpu_layers": -1,
+    "n_cpu_moe": 0,
+    "split_mode": "layer",
+    "main_gpu": 0,
+    "no_kv_offload": false,
+    "flash_attn": -1,
+    "devices": "auto",
+    "tensor_split": "0.00",
+    "tensor_buft_overrides": "none",
+    "load_mode": "mmap",
+    "embeddings": false,
+    "no_op_offload": 0,
+    "no_host": false,
+    "fit_target": 0,
+    "fit_min_ctx": 0,
+    "n_prompt": 128,
+    "n_gen": 0,
+    "n_depth": 0,
+    "test_time": "2026-08-09T10:05:22Z",
+    "avg_ns": 3710932720,
+    "stddev_ns": 986419513,
+    "avg_ts": 35.755883,
+    "stddev_ts": 9.504430,
+    "samples_ns": [ 3013428793, 4408436647 ],
+    "samples_ts": [ 42.4765, 29.0352 ]
+  }
+[W 2026-08-09 15:35:35,445] Trial 15 failed with value None.
+2026-08-09 15:36:02,465 candidate evaluation failed (attempt 1/2): 
+[W 2026-08-09 15:36:42,679] Trial 16 failed with parameters: {'blk_0': 'Q5_K', 'blk_1': 'Q4_0', 'blk_2': 'Q5_K', 'blk_3': 'Q4_0', 'blk_4': 'Q8_0', 'blk_5': 'Q8_0', 'blk_6': 'Q8_0', 'blk_7': 'Q6_K', 'blk_8': 'Q6_K', 'blk_9': 'Q8_0', 'blk_10': 'Q6_K', 'blk_11': 'Q5_K', 'blk_12': 'Q6_K', 'blk_13': 'Q6_K', 'blk_14': 'Q8_0', 'blk_15': 'Q5_K', 'blk_16': 'Q4_0', 'blk_17': 'Q5_K', 'blk_18': 'Q8_0', 'blk_19': 'Q8_0', 'blk_20': 'Q8_0', 'blk_21': 'Q4_0', 'blk_22': 'Q4_0', 'blk_23': 'Q6_K', 'blk_24': 'Q6_K', 'blk_25': 'Q8_0'} because of the following error: TimeoutExpired(['adb', 'wait-for-device'], 30).
+Traceback (most recent call last):
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\.venv\Lib\site-packages\optuna\study\_optimize.py", line 206, in _run_trial
+    value_or_values = func(trial)
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\study_tpe.py", line 39, in objective
+    obj = score_candidate(candidate, n_prompt=n_prompt, n_gen=n_gen, reps=reps)
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\fitness.py", line 49, in score_candidate
+    m: Measurement = evaluate(candidate, n_prompt=n_prompt, n_gen=n_gen, reps=reps, out_name=out_name)
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\quantize_and_bench.py", line 112, in evaluate
+    _quantize(candidate, out_name)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\quantize_and_bench.py", line 53, in _quantize
+    push(str(local_path), type_file_name)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\device.py", line 64, in push
+    result = _run_with_retry(["adb", "push", local_path, remote(remote_name)], timeout=60)
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\device.py", line 50, in _run_with_retry
+    _restart_adb_server()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\device.py", line 34, in _restart_adb_server
+    subprocess.run(["adb", "wait-for-device"], capture_output=True, env=_ENV, timeout=30)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krish\AppData\Local\Programs\Python\Python313\Lib\subprocess.py", line 556, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krish\AppData\Local\Programs\Python\Python313\Lib\subprocess.py", line 1219, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krish\AppData\Local\Programs\Python\Python313\Lib\subprocess.py", line 1640, in _communicate
+    raise TimeoutExpired(self.args, orig_timeout)
+subprocess.TimeoutExpired: Command '['adb', 'wait-for-device']' timed out after 30 seconds
+[W 2026-08-09 15:36:42,680] Trial 16 failed with value None.
+2026-08-09 15:40:42,245 trial 17: score=1.2105 pp=63.0 tok/s size=886MiB (239.6s)
+[I 2026-08-09 15:40:42,245] Trial 17 finished with value: 1.2104766244558283 and parameters: {'blk_0': 'Q5_K', 'blk_1': 'Q4_0', 'blk_2': 'Q5_K', 'blk_3': 'Q4_0', 'blk_4': 'Q8_0', 'blk_5': 'Q8_0', 'blk_6': 'Q8_0', 'blk_7': 'Q6_K', 'blk_8': 'Q8_0', 'blk_9': 'Q8_0', 'blk_10': 'Q6_K', 'blk_11': 'Q8_0', 'blk_12': 'Q5_K', 'blk_13': 'Q6_K', 'blk_14': 'Q4_0', 'blk_15': 'Q5_K', 'blk_16': 'Q4_0', 'blk_17': 'Q5_K', 'blk_18': 'Q8_0', 'blk_19': 'Q8_0', 'blk_20': 'Q8_0', 'blk_21': 'Q4_0', 'blk_22': 'Q4_0', 'blk_23': 'Q6_K', 'blk_24': 'Q8_0', 'blk_25': 'Q8_0'}. Best is trial 0 with value: 2.610975594023467.
+2026-08-09 15:41:09,229 candidate evaluation failed (attempt 1/2): 
+2026-08-09 15:45:10,566 trial 18: score=0.9181 pp=33.7 tok/s size=871MiB (268.3s)
+[I 2026-08-09 15:45:10,566] Trial 18 finished with value: 0.9180503065124687 and parameters: {'blk_0': 'Q8_0', 'blk_1': 'Q8_0', 'blk_2': 'Q4_0', 'blk_3': 'Q5_K', 'blk_4': 'Q4_0', 'blk_5': 'Q4_0', 'blk_6': 'Q4_0', 'blk_7': 'Q8_0', 'blk_8': 'Q6_K', 'blk_9': 'Q6_K', 'blk_10': 'Q5_K', 'blk_11': 'Q5_K', 'blk_12': 'Q6_K', 'blk_13': 'Q4_0', 'blk_14': 'Q8_0', 'blk_15': 'Q6_K', 'blk_16': 'Q4_0', 'blk_17': 'Q5_K', 'blk_18': 'Q8_0', 'blk_19': 'Q8_0', 'blk_20': 'Q6_K', 'blk_21': 'Q6_K', 'blk_22': 'Q5_K', 'blk_23': 'Q5_K', 'blk_24': 'Q6_K', 'blk_25': 'Q8_0'}. Best is trial 0 with value: 2.610975594023467.
+2026-08-09 15:48:51,503 trial 19: score=1.9113 pp=103.8 tok/s size=888MiB (220.9s)
+[I 2026-08-09 15:48:51,503] Trial 19 finished with value: 1.9112749772056967 and parameters: {'blk_0': 'Q5_K', 'blk_1': 'Q8_0', 'blk_2': 'Q5_K', 'blk_3': 'Q4_0', 'blk_4': 'Q8_0', 'blk_5': 'Q5_K', 'blk_6': 'Q8_0', 'blk_7': 'Q6_K', 'blk_8': 'Q8_0', 'blk_9': 'Q8_0', 'blk_10': 'Q4_0', 'blk_11': 'Q8_0', 'blk_12': 'Q5_K', 'blk_13': 'Q6_K', 'blk_14': 'Q4_0', 'blk_15': 'Q5_K', 'blk_16': 'Q6_K', 'blk_17': 'Q6_K', 'blk_18': 'Q4_0', 'blk_19': 'Q6_K', 'blk_20': 'Q8_0', 'blk_21': 'Q8_0', 'blk_22': 'Q4_0', 'blk_23': 'Q5_K', 'blk_24': 'Q8_0', 'blk_25': 'Q8_0'}. Best is trial 0 with value: 2.610975594023467.
+2026-08-09 15:52:42,476 trial 20: score=2.6577 pp=163.4 tok/s size=931MiB (231.0s)
+[I 2026-08-09 15:52:42,476] Trial 20 finished with value: 2.6577300801757904 and parameters: {'blk_0': 'Q8_0', 'blk_1': 'Q8_0', 'blk_2': 'Q5_K', 'blk_3': 'Q8_0', 'blk_4': 'Q8_0', 'blk_5': 'Q4_0', 'blk_6': 'Q6_K', 'blk_7': 'Q4_0', 'blk_8': 'Q6_K', 'blk_9': 'Q6_K', 'blk_10': 'Q6_K', 'blk_11': 'Q5_K', 'blk_12': 'Q6_K', 'blk_13': 'Q8_0', 'blk_14': 'Q8_0', 'blk_15': 'Q8_0', 'blk_16': 'Q8_0', 'blk_17': 'Q5_K', 'blk_18': 'Q8_0', 'blk_19': 'Q8_0', 'blk_20': 'Q6_K', 'blk_21': 'Q4_0', 'blk_22': 'Q6_K', 'blk_23': 'Q8_0', 'blk_24': 'Q6_K', 'blk_25': 'Q6_K'}. Best is trial 20 with value: 2.6577300801757904.
+2026-08-09 15:55:48,990 trial 21: score=1.9313 pp=102.4 tok/s size=881MiB (186.5s)
+[I 2026-08-09 15:55:48,990] Trial 21 finished with value: 1.931274526165933 and parameters: {'blk_0': 'Q4_0', 'blk_1': 'Q6_K', 'blk_2': 'Q4_0', 'blk_3': 'Q8_0', 'blk_4': 'Q8_0', 'blk_5': 'Q4_0', 'blk_6': 'Q6_K', 'blk_7': 'Q4_0', 'blk_8': 'Q5_K', 'blk_9': 'Q6_K', 'blk_10': 'Q6_K', 'blk_11': 'Q5_K', 'blk_12': 'Q6_K', 'blk_13': 'Q8_0', 'blk_14': 'Q6_K', 'blk_15': 'Q8_0', 'blk_16': 'Q8_0', 'blk_17': 'Q6_K', 'blk_18': 'Q4_0', 'blk_19': 'Q5_K', 'blk_20': 'Q5_K', 'blk_21': 'Q4_0', 'blk_22': 'Q6_K', 'blk_23': 'Q8_0', 'blk_24': 'Q6_K', 'blk_25': 'Q6_K'}. Best is trial 20 with value: 2.6577300801757904.
+2026-08-09 15:58:54,237 trial 22: score=2.9861 pp=192.3 tok/s size=907MiB (185.2s)
+[I 2026-08-09 15:58:54,238] Trial 22 finished with value: 2.986106165926823 and parameters: {'blk_0': 'Q8_0', 'blk_1': 'Q4_0', 'blk_2': 'Q6_K', 'blk_3': 'Q8_0', 'blk_4': 'Q4_0', 'blk_5': 'Q4_0', 'blk_6': 'Q6_K', 'blk_7': 'Q4_0', 'blk_8': 'Q8_0', 'blk_9': 'Q6_K', 'blk_10': 'Q6_K', 'blk_11': 'Q5_K', 'blk_12': 'Q6_K', 'blk_13': 'Q8_0', 'blk_14': 'Q4_0', 'blk_15': 'Q8_0', 'blk_16': 'Q8_0', 'blk_17': 'Q8_0', 'blk_18': 'Q6_K', 'blk_19': 'Q8_0', 'blk_20': 'Q6_K', 'blk_21': 'Q4_0', 'blk_22': 'Q6_K', 'blk_23': 'Q8_0', 'blk_24': 'Q6_K', 'blk_25': 'Q6_K'}. Best is trial 22 with value: 2.986106165926823.
+2026-08-09 16:02:04,303 trial 23: score=2.7031 pp=169.9 tok/s size=922MiB (190.1s)
+[I 2026-08-09 16:02:04,304] Trial 23 finished with value: 2.7030535672085962 and parameters: {'blk_0': 'Q8_0', 'blk_1': 'Q4_0', 'blk_2': 'Q6_K', 'blk_3': 'Q8_0', 'blk_4': 'Q4_0', 'blk_5': 'Q4_0', 'blk_6': 'Q6_K', 'blk_7': 'Q4_0', 'blk_8': 'Q6_K', 'blk_9': 'Q6_K', 'blk_10': 'Q5_K', 'blk_11': 'Q5_K', 'blk_12': 'Q6_K', 'blk_13': 'Q8_0', 'blk_14': 'Q8_0', 'blk_15': 'Q8_0', 'blk_16': 'Q8_0', 'blk_17': 'Q8_0', 'blk_18': 'Q6_K', 'blk_19': 'Q8_0', 'blk_20': 'Q6_K', 'blk_21': 'Q6_K', 'blk_22': 'Q6_K', 'blk_23': 'Q8_0', 'blk_24': 'Q6_K', 'blk_25': 'Q6_K'}. Best is trial 22 with value: 2.986106165926823.
+2026-08-09 16:02:04,304 best score: 2.9861
+2026-08-09 16:02:04,304 best config: {'blk_0': 'Q8_0', 'blk_1': 'Q4_0', 'blk_2': 'Q6_K', 'blk_3': 'Q8_0', 'blk_4': 'Q4_0', 'blk_5': 'Q4_0', 'blk_6': 'Q6_K', 'blk_7': 'Q4_0', 'blk_8': 'Q8_0', 'blk_9': 'Q6_K', 'blk_10': 'Q6_K', 'blk_11': 'Q5_K', 'blk_12': 'Q6_K', 'blk_13': 'Q8_0', 'blk_14': 'Q4_0', 'blk_15': 'Q8_0', 'blk_16': 'Q8_0', 'blk_17': 'Q8_0', 'blk_18': 'Q6_K', 'blk_19': 'Q8_0', 'blk_20': 'Q6_K', 'blk_21': 'Q4_0', 'blk_22': 'Q6_K', 'blk_23': 'Q8_0', 'blk_24': 'Q6_K', 'blk_25': 'Q6_K'}
+++ date
++ echo 'TPE DONE: Sun Aug  9 16:02:04 IST 2026'
+TPE DONE: Sun Aug  9 16:02:04 IST 2026
++ echo ALL_DONE
+ALL_DONE

@@ -17,9 +17,8 @@ local.properties
 # Internal planning docs (brainstorm specs/plans) - not part of the public submission
 /docs/superpowers/
 
-# Quantization search: venv and raw per-trial logs (curated results get promoted
-# to docs/, same as the BENCHMARKS.md pattern)
+# Quantization search: venv only. Raw per-trial logs (optimize/results/) are
+# tracked on purpose so teammates can see and compare each other's runs.
 /optimize/.venv/
-/optimize/results/
 /optimize/__pycache__/
 /optimize/baselines/__pycache__/

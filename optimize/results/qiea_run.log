@@ -1,0 +1,14 @@
+2026-08-13 12:04:11,236 gen 0 individual 0: score=2.4587 (220.3s)
+2026-08-13 12:08:15,140 gen 0 individual 1: score=2.2282 (243.9s)
+2026-08-13 12:13:13,383 gen 0 individual 2: score=2.3511 (298.2s)
+2026-08-13 12:13:13,383 gen 0: distribution entropy=42.5 / 52 bits
+2026-08-13 12:18:29,469 gen 1 individual 0: score=2.1486 (316.1s)
+2026-08-13 12:23:11,585 gen 1 individual 1: score=1.6047 (282.1s)
+2026-08-13 12:28:00,587 gen 1 individual 2: score=1.9668 (289.0s)
+2026-08-13 12:28:00,587 gen 1: distribution entropy=33.3 / 52 bits
+2026-08-13 12:33:19,411 gen 2 individual 0: score=2.1135 (318.8s)
+2026-08-13 12:38:03,860 gen 2 individual 1: score=2.1692 (284.4s)
+2026-08-13 12:43:14,511 gen 2 individual 2: score=1.5905 (309.3s)
+2026-08-13 12:43:14,512 gen 2: distribution entropy=28.8 / 52 bits
+2026-08-13 12:43:14,512 best score: 2.4587
+2026-08-13 12:43:14,512 best config: ('Q4_0', 'Q8_0', 'Q5_K', 'Q5_K', 'Q6_K', 'Q4_0', 'Q6_K', 'Q5_K', 'Q4_0', 'Q4_0', 'Q6_K', 'Q4_0', 'Q8_0', 'Q6_K', 'Q4_0', 'Q6_K', 'Q6_K', 'Q5_K', 'Q5_K', 'Q4_0', 'Q8_0', 'Q5_K', 'Q6_K', 'Q6_K', 'Q6_K', 'Q5_K')

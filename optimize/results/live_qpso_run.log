@@ -1,0 +1,21 @@
+2026-08-08 23:33:41,491 candidate evaluation failed (attempt 1/2):      1,      1], type =    f32, size =    0.004 MiB
+[ 273/ 340] blk.20.ffn_up.weight                 - [  1152,   6912,      1,      1], type =   bf16, converting to q5_1 .. size =    15.19 MiB ->    
+2026-08-08 23:34:02,403 candidate evaluation failed (attempt 2/2): ting to q8_0 .. size =     0.56 MiB ->     0.30 MiB
+[ 140/ 340] blk.10.ffn_down.weight               - [  6912,   1152,      1,      1], type =   bf16, converting to q8_0 .. size =    15.19 MiB ->    
+2026-08-08 23:34:02,404 gen 0 particle 0 FAILED after retries (39.4s): ting to q8_0 .. size =     0.56 MiB ->     0.30 MiB
+[ 140/ 340] blk.10.ffn_down.weight               - [  6912,   1152,      1,      1], type =   bf16, converting to q8_0 .. size =    15.19 MiB ->    
+2026-08-08 23:34:11,936 candidate evaluation failed (attempt 1/2): blk.24.ffn_gate.weight               - ncols   1152 not divisible by 256 (required for type    q6_K) -> falling back to    q8_0
+llama_tensor_get_type: blk.24.ffn_up.weight                 - applying m
+2026-08-08 23:34:39,044 candidate evaluation failed (attempt 2/2):  =    0.004 MiB
+[ 305/ 340] blk.23.attn_output.weight            - [  1024,   1152,      1,      1], type =   bf16, converting to q8_0 .. size =     2.25 MiB ->     1.20 MiB
+[ 306/ 340] blk.23.attn_q.
+2026-08-08 23:34:39,044 gen 0 particle 1 FAILED after retries (36.6s):  =    0.004 MiB
+[ 305/ 340] blk.23.attn_output.weight            - [  1024,   1152,      1,      1], type =   bf16, converting to q8_0 .. size =     2.25 MiB ->     1.20 MiB
+[ 306/ 340] blk.23.attn_q.
+2026-08-08 23:34:39,044 gen 0: all particles failed, skipping position update
+2026-08-08 23:37:59,846 gen 1 particle 0: score=0.9723 (200.8s)
+2026-08-08 23:40:56,344 gen 1 particle 1: score=1.2228 (176.5s)
+2026-08-08 23:43:46,521 gen 2 particle 0: score=0.9277 (170.2s)
+2026-08-08 23:46:35,194 gen 2 particle 1: score=1.5256 (168.7s)
+2026-08-08 23:46:35,194 best score: 1.5256
+2026-08-08 23:46:35,194 best config: ('Q5_K', 'Q6_K', 'Q8_0', 'Q8_0', 'Q5_K', 'Q6_K', 'Q4_0', 'Q5_K', 'Q6_K', 'Q5_K', 'Q6_K', 'Q5_K', 'Q6_K', 'Q6_K', 'Q5_K', 'Q6_K', 'Q8_0', 'Q5_K', 'Q5_K', 'Q8_0', 'Q4_0', 'Q6_K', 'Q4_0', 'Q8_0', 'Q8_0', 'Q5_K')

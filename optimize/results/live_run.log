@@ -1,0 +1,59 @@
++ ./.venv/Scripts/python.exe baselines/random_search.py --trials 6 --n-prompt 64 --n-gen 16 --reps 1 --log results/live_random.jsonl
+2026-08-08 22:50:37,354 trial 0: score=1.6485 pp=82.9 tok/s size=888MiB (142.2s)
+2026-08-08 22:53:19,539 trial 1: score=1.1507 pp=52.0 tok/s size=843MiB (162.2s)
+2026-08-08 22:56:17,829 trial 2: score=1.0118 pp=47.0 tok/s size=847MiB (178.3s)
+2026-08-08 22:59:35,083 trial 3: score=1.2569 pp=48.5 tok/s size=832MiB (197.3s)
+2026-08-08 23:02:39,552 trial 4: score=0.7194 pp=14.5 tok/s size=800MiB (184.5s)
+2026-08-08 23:05:00,363 trial 5: score=2.2377 pp=135.6 tok/s size=871MiB (140.8s)
+2026-08-08 23:05:00,363 best score: 2.2377
+2026-08-08 23:05:00,363 best config: ('Q4_0', 'Q8_0', 'Q4_0', 'Q4_0', 'Q8_0', 'Q5_K', 'Q6_K', 'Q6_K', 'Q8_0', 'Q5_K', 'Q5_K', 'Q4_0', 'Q5_K', 'Q5_K', 'Q6_K', 'Q6_K', 'Q4_0', 'Q8_0', 'Q5_K', 'Q4_0', 'Q8_0', 'Q8_0', 'Q6_K', 'Q6_K', 'Q8_0', 'Q6_K')
++ ./.venv/Scripts/python.exe baselines/qpso.py --particles 2 --generations 3 --n-prompt 64 --n-gen 16 --reps 1 --log results/live_qpso.jsonl
+Traceback (most recent call last):
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\baselines\qpso.py", line 113, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\baselines\qpso.py", line 78, in main
+    score = evaluate_position(pos, args.n_prompt, args.n_gen, args.reps)
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\baselines\qpso.py", line 42, in evaluate_position
+    obj = score_candidate(candidate, n_prompt=n_prompt, n_gen=n_gen, reps=reps)
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\fitness.py", line 30, in score_candidate
+    m: Measurement = evaluate(candidate, n_prompt=n_prompt, n_gen=n_gen, reps=reps, out_name=out_name)
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\quantize_and_bench.py", line 112, in evaluate
+    _quantize(candidate, out_name)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krish\Documents\VSCode\Arm\optimize\quantize_and_bench.py", line 68, in _quantize
+    raise QuantizeError(result.stdout[-2000:] + result.stderr[-2000:])
+quantize_and_bench.QuantizeError:    - [  1152,      1,      1,      1], type =    f32, size =    0.004 MiB
+[ 156/ 340] blk.11.ffn_up.weight                 - [  1152,   6912,      1,      1], type =   bf16, converting to q8_0 .. size =    15.19 MiB ->     8.07 MiB
+[ 157/ 340] blk.11.post_attention_norm.weight    - [  1152,      1,      1,      1], type =    f32, size =    0.004 MiB
+[ 158/ 340] blk.11.post_ffw_norm.weight          - [  1152,      1,      1,      1], type =    f32, size =    0.004 MiB
+[ 159/ 340] blk.12.attn_k.weight                 - [  1152,    256,      1,      1], type =   bf16, converting to q5_1 .. size =     0.56 MiB ->     0.21 MiB
+[ 160/ 340] blk.12.attn_k_norm.weight            - [   256,      1,      1,      1], type =    f32, size =    0.001 MiB
+[ 161/ 340] blk.12.attn_norm.weight              - [  1152,      1,      1,      1], type =    f32, size =    0.004 MiB
+[ 162/ 340] blk.12.attn_output.weight            - [  1024,   1152,      1,      1], type =   bf16, converting to q5_K .. size =     2.25 MiB ->     0.77 MiB
+[ 163/ 340] blk.12.attn_q.weight                 - [  1152,   1024,      1,      1], type =   bf16, converting to q5_1 .. size =     2.25 MiB ->     0.84 MiB
+[ 164/ 340] blk.12.attn_q_norm.weight            - [   256,      1,      1,      1], type =    f32, size =    0.001 MiB
+[ 165/ 340] blk.12.attn_v.weight                 - [  1152,    256,      1,      1], type =   bf16, converting to q5_1 .. size =     0.56 MiB ->     0.21 MiB
+[ 166/ 340] blk.12.ffn_down.weight               - [  6912,   1152,      1,      1], type =   bf16, converting to q5_K .. size =    15.19 MiB ->     5.22 MiB
+[ 167/ 340] blk.12.ffn_gate.weight               - [  1152,   6912,      1,      1], type =   bf16, converting to q5_1 .. size =    15.19 MiB ->     5.70 MiB
+[ 168/ 340] blk.12.ffn_norm.weight               - [  1152,      1,      1,      1], type =    f32, size =    0.004 MiB
+[ 169/ 340] blk.12.ffn_up.weight                 - [  1152,   6912,      1,      1], type =   bf16, 
++ ./.venv/Scripts/python.exe study_tpe.py --trials 6 --n-prompt 64 --n-gen 16 --reps 1 --log results/live_tpe.jsonl
+[I 2026-08-08 23:05:18,808] A new study created in memory with name: no-name-0d8c364a-46b8-4c90-bfa9-471601a662cf
+2026-08-08 23:08:31,776 trial 0: score=1.9034 pp=100.1 tok/s size=877MiB (193.0s)
+[I 2026-08-08 23:08:31,776] Trial 0 finished with value: 1.9033796579389177 and parameters: {'blk_0': 'Q5_K', 'blk_1': 'Q8_0', 'blk_2': 'Q4_0', 'blk_3': 'Q5_K', 'blk_4': 'Q8_0', 'blk_5': 'Q4_0', 'blk_6': 'Q8_0', 'blk_7': 'Q8_0', 'blk_8': 'Q8_0', 'blk_9': 'Q6_K', 'blk_10': 'Q6_K', 'blk_11': 'Q5_K', 'blk_12': 'Q6_K', 'blk_13': 'Q4_0', 'blk_14': 'Q4_0', 'blk_15': 'Q6_K', 'blk_16': 'Q6_K', 'blk_17': 'Q6_K', 'blk_18': 'Q4_0', 'blk_19': 'Q6_K', 'blk_20': 'Q8_0', 'blk_21': 'Q4_0', 'blk_22': 'Q5_K', 'blk_23': 'Q5_K', 'blk_24': 'Q6_K', 'blk_25': 'Q8_0'}. Best is trial 0 with value: 1.9033796579389177.
+2026-08-08 23:11:03,086 trial 1: score=1.9489 pp=103.5 tok/s size=843MiB (151.3s)
+[I 2026-08-08 23:11:03,086] Trial 1 finished with value: 1.9489379033323586 and parameters: {'blk_0': 'Q6_K', 'blk_1': 'Q5_K', 'blk_2': 'Q6_K', 'blk_3': 'Q6_K', 'blk_4': 'Q6_K', 'blk_5': 'Q5_K', 'blk_6': 'Q4_0', 'blk_7': 'Q8_0', 'blk_8': 'Q5_K', 'blk_9': 'Q4_0', 'blk_10': 'Q8_0', 'blk_11': 'Q5_K', 'blk_12': 'Q8_0', 'blk_13': 'Q4_0', 'blk_14': 'Q8_0', 'blk_15': 'Q4_0', 'blk_16': 'Q4_0', 'blk_17': 'Q6_K', 'blk_18': 'Q5_K', 'blk_19': 'Q5_K', 'blk_20': 'Q4_0', 'blk_21': 'Q4_0', 'blk_22': 'Q5_K', 'blk_23': 'Q8_0', 'blk_24': 'Q5_K', 'blk_25': 'Q6_K'}. Best is trial 1 with value: 1.9489379033323586.
+2026-08-08 23:13:42,639 trial 2: score=2.0178 pp=109.0 tok/s size=845MiB (159.6s)
+[I 2026-08-08 23:13:42,639] Trial 2 finished with value: 2.0177848591718606 and parameters: {'blk_0': 'Q6_K', 'blk_1': 'Q8_0', 'blk_2': 'Q8_0', 'blk_3': 'Q5_K', 'blk_4': 'Q5_K', 'blk_5': 'Q4_0', 'blk_6': 'Q4_0', 'blk_7': 'Q8_0', 'blk_8': 'Q4_0', 'blk_9': 'Q4_0', 'blk_10': 'Q8_0', 'blk_11': 'Q6_K', 'blk_12': 'Q6_K', 'blk_13': 'Q8_0', 'blk_14': 'Q5_K', 'blk_15': 'Q6_K', 'blk_16': 'Q5_K', 'blk_17': 'Q4_0', 'blk_18': 'Q5_K', 'blk_19': 'Q6_K', 'blk_20': 'Q5_K', 'blk_21': 'Q4_0', 'blk_22': 'Q6_K', 'blk_23': 'Q4_0', 'blk_24': 'Q4_0', 'blk_25': 'Q6_K'}. Best is trial 2 with value: 2.0177848591718606.
+2026-08-08 23:16:20,756 trial 3: score=0.7794 pp=13.7 tok/s size=869MiB (158.1s)
+[I 2026-08-08 23:16:20,756] Trial 3 finished with value: 0.7794338737424692 and parameters: {'blk_0': 'Q6_K', 'blk_1': 'Q6_K', 'blk_2': 'Q8_0', 'blk_3': 'Q8_0', 'blk_4': 'Q8_0', 'blk_5': 'Q6_K', 'blk_6': 'Q6_K', 'blk_7': 'Q6_K', 'blk_8': 'Q4_0', 'blk_9': 'Q5_K', 'blk_10': 'Q8_0', 'blk_11': 'Q8_0', 'blk_12': 'Q5_K', 'blk_13': 'Q4_0', 'blk_14': 'Q4_0', 'blk_15': 'Q4_0', 'blk_16': 'Q5_K', 'blk_17': 'Q6_K', 'blk_18': 'Q5_K', 'blk_19': 'Q4_0', 'blk_20': 'Q8_0', 'blk_21': 'Q5_K', 'blk_22': 'Q8_0', 'blk_23': 'Q4_0', 'blk_24': 'Q4_0', 'blk_25': 'Q8_0'}. Best is trial 2 with value: 2.0177848591718606.
+2026-08-08 23:18:56,592 trial 4: score=1.8664 pp=103.4 tok/s size=913MiB (155.8s)
+[I 2026-08-08 23:18:56,592] Trial 4 finished with value: 1.8664081437892917 and parameters: {'blk_0': 'Q8_0', 'blk_1': 'Q5_K', 'blk_2': 'Q6_K', 'blk_3': 'Q4_0', 'blk_4': 'Q5_K', 'blk_5': 'Q6_K', 'blk_6': 'Q6_K', 'blk_7': 'Q8_0', 'blk_8': 'Q8_0', 'blk_9': 'Q6_K', 'blk_10': 'Q8_0', 'blk_11': 'Q8_0', 'blk_12': 'Q6_K', 'blk_13': 'Q8_0', 'blk_14': 'Q6_K', 'blk_15': 'Q6_K', 'blk_16': 'Q8_0', 'blk_17': 'Q8_0', 'blk_18': 'Q4_0', 'blk_19': 'Q4_0', 'blk_20': 'Q8_0', 'blk_21': 'Q8_0', 'blk_22': 'Q5_K', 'blk_23': 'Q5_K', 'blk_24': 'Q4_0', 'blk_25': 'Q8_0'}. Best is trial 2 with value: 2.0177848591718606.
+2026-08-08 23:21:37,484 trial 5: score=0.8907 pp=31.6 tok/s size=883MiB (160.9s)
+[I 2026-08-08 23:21:37,484] Trial 5 finished with value: 0.8907055156902141 and parameters: {'blk_0': 'Q8_0', 'blk_1': 'Q8_0', 'blk_2': 'Q5_K', 'blk_3': 'Q4_0', 'blk_4': 'Q8_0', 'blk_5': 'Q5_K', 'blk_6': 'Q4_0', 'blk_7': 'Q6_K', 'blk_8': 'Q6_K', 'blk_9': 'Q8_0', 'blk_10': 'Q6_K', 'blk_11': 'Q8_0', 'blk_12': 'Q5_K', 'blk_13': 'Q6_K', 'blk_14': 'Q8_0', 'blk_15': 'Q5_K', 'blk_16': 'Q4_0', 'blk_17': 'Q5_K', 'blk_18': 'Q8_0', 'blk_19': 'Q8_0', 'blk_20': 'Q6_K', 'blk_21': 'Q4_0', 'blk_22': 'Q4_0', 'blk_23': 'Q4_0', 'blk_24': 'Q8_0', 'blk_25': 'Q8_0'}. Best is trial 2 with value: 2.0177848591718606.
+2026-08-08 23:21:37,485 best score: 2.0178
+2026-08-08 23:21:37,485 best config: {'blk_0': 'Q6_K', 'blk_1': 'Q8_0', 'blk_2': 'Q8_0', 'blk_3': 'Q5_K', 'blk_4': 'Q5_K', 'blk_5': 'Q4_0', 'blk_6': 'Q4_0', 'blk_7': 'Q8_0', 'blk_8': 'Q4_0', 'blk_9': 'Q4_0', 'blk_10': 'Q8_0', 'blk_11': 'Q6_K', 'blk_12': 'Q6_K', 'blk_13': 'Q8_0', 'blk_14': 'Q5_K', 'blk_15': 'Q6_K', 'blk_16': 'Q5_K', 'blk_17': 'Q4_0', 'blk_18': 'Q5_K', 'blk_19': 'Q6_K', 'blk_20': 'Q5_K', 'blk_21': 'Q4_0', 'blk_22': 'Q6_K', 'blk_23': 'Q4_0', 'blk_24': 'Q4_0', 'blk_25': 'Q6_K'}
++ echo ALL_DONE
+ALL_DONE
