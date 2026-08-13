@@ -140,7 +140,8 @@ class GemmaCallAnalyzer(
                             samplerConfig = SamplerConfig(
                                 topK = 40,
                                 topP = 0.95,
-                                temperature = 0.8,
+                                // Structured classification should be repeatable, not creative.
+                                temperature = 0.2,
                             ),
                         ),
                     )
