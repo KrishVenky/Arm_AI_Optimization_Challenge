@@ -93,11 +93,15 @@ class AudimusAccessibilityService : AccessibilityService() {
         scrapeJob?.cancel()
         scrapeJob = scope.launch {
             delay(SCRAPE_DEBOUNCE_MS)
+            // The source can switch again during the debounce delay (e.g. captions moved from
+            // Chrome to Live Caption); scraping pkg's window after that would read the wrong app.
+            if (activeSourcePkg != pkg) return@launch
             // The transcript may live in an overlay window (Live Caption) that is NOT
             // rootInActiveWindow, so locate the window owned by the source package; fall back to
             // the active window.
             val root = rootForPackage(pkg) ?: rootInActiveWindow
             runCatching { scraper.scrape(root) }
+                .onFailure { Log.w(TAG, "Transcript scrape failed for $pkg", it) }
         }
     }
 

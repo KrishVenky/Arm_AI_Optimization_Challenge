@@ -82,6 +82,10 @@ class AnalysisPipeline(
     /** Set by an instant rule-based hit so the next poll runs Gemma right away instead of waiting
      *  out the normal batching window -- the fast path flags it, Gemma confirms/refines/de-escalates. */
     private var instantTriggerPending = false
+    /** Bumped on anything that invalidates an in-flight Gemma pass (new text, call end/reset, a
+     *  fresh call starting): a slow analyze() call that started against an earlier session state
+     *  must not overwrite whatever the current state has become by the time it returns. */
+    private var transcriptRevision = 0L
 
     suspend fun initialize() {
         if (initialized) return
@@ -114,6 +118,7 @@ class AnalysisPipeline(
         if (!ProtectionState.callActive.value) beginCall()
         lastUtteranceMs = System.currentTimeMillis()
         entries.add(TranscriptEntry(lastUtteranceMs, clean))
+        transcriptRevision++
         trimEntries()
         ProtectionState.setTranscript(entries.toList())
         // Feed the consent handshake: it classifies the caller's spoken yes/no.
@@ -163,6 +168,7 @@ class AnalysisPipeline(
         ProtectionState.setPendingTasks(emptyList())
         ProtectionState.setShowFollowups(false)
         ProtectionState.setCallActive(true)
+        transcriptRevision++ // invalidate any in-flight result from a preceding call session
         callStartMs = System.currentTimeMillis()
         lastUtteranceMs = callStartMs
         lastAnalysisMs = callStartMs
@@ -187,6 +193,7 @@ class AnalysisPipeline(
         recordCallIfAny()
         consent.reset()
         ProtectionState.setCallActive(false)
+        transcriptRevision++ // an in-flight analysis pass must not update an ended call
         ProtectionState.setScraping(false)
         if (pendingMeetings.isNotEmpty() || pendingTasks.isNotEmpty()) {
             // Keep the pending follow-ups (already mirrored to ProtectionState) for review.
@@ -228,6 +235,7 @@ class AnalysisPipeline(
     fun dismissFollowups() = resetAll()
 
     private fun resetAll() {
+        transcriptRevision++ // invalidate any in-flight analysis pass before clearing the session
         entries.clear()
         pendingMeetings.clear()
         pendingTasks.clear()
@@ -286,11 +294,20 @@ class AnalysisPipeline(
                 // Bound the prompt: reason over the most recent window, not the whole call.
                 val text = fullText.takeLast(TRANSCRIPT_WINDOW_CHARS)
                 if (text.isBlank()) continue
+                val revisionAtStart = transcriptRevision
                 val result = try {
                     analyzer.analyze(text)
                 } catch (e: Exception) {
                     Log.e(TAG, "analysis failed", e); null
                 } ?: continue
+                // The call may have ended/reset (or new text arrived) while this slow analyze()
+                // call was in flight -- e.g. the idle watchdog auto-ending the call concurrently.
+                // Applying a result computed against a session that no longer exists would corrupt
+                // the new one, so discard it instead.
+                if (revisionAtStart != transcriptRevision) {
+                    Log.i(TAG, "Discarding stale analysis result (revision $revisionAtStart -> $transcriptRevision)")
+                    continue
+                }
                 applyAnalysis(result)
             }
         }
